@@ -1,13 +1,18 @@
 Package: BalanceMate
-Title: Mangaging, Pre-processing, And Processing Postural Data
+Title: Managing, Pre-processing, And Processing Postural Data
 Version: 0.0.0.9000
 Authors@R: 
     person("Jean", "Monéger", , "moneger.jean@outlook.fr", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1178-1896"))
-Description: This package groups functions that facilitates postural data management (e.g., merging data files, time-stamping the files, creating epochs), pre-processing (e.g., applying filter), and processing (e.g., computing Center of Pressure, Sway Path Length). It is designed to work with .txt outputs exported from the AMTI software "NetForce".
+Description: This package groups functions that facilitates postural data management (e.g., merging data files, time-stamping the files, creating epochs), pre-processing (e.g., applying filter), and processing (e.g., computing Center of Pressure, Sway Path Length). It is designed to work with .txt outputs exported from the AMTI software "NetForce". *This work was supported by the laboratory Vision Action Cognition (Université Paris Cité), which provided the resources and environment necessary for this project's development.*
+Imports:
+    signal (>= 1.8-0)
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
-URL: https://github.com/JeanMoneger/PostuRe
-BugReports: https://github.com/JeanMoneger/PostuRe/issues
+RoxygenNote: 7.3.2
+URL: https://github.com/JeanMoneger/BalanceMate
+BugReports: https://github.com/JeanMoneger/BalanceMate/issues
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
