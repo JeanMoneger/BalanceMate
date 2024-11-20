@@ -14,13 +14,27 @@
 #' @export
 #'
 #' @examples
-#' path_to_data <- system.file("extdata", package = "BalanceMate") #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
-#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331) # Input correct arguments: in this example, the protocol was 331seconds long and the sample rate was 100Hz
+#' # Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+#' path_to_data <- system.file("extdata", package = "BalanceMate")
+#' # Input correct arguments: here, the protocol is 331seconds long, the sample rate is 100Hz
+#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
 #'
-#' # Considering that each session starts with 30 seconds of training, then 3 trials (10 seconds fixation cross + 90 seconds trial), and 1 second of blank screen:
+#' # here session: 30 s training, 3 trials (10 s fix cross + 90 s trial), 1s blank
 #' cuts = c(30, 40, 130, 140, 230, 240, 330)
-#' labels = c("Training", "FixationCross", "trial1", "FixationCross", "trial2", "FixationCross", "trial3", "blank")
-#' Data <- Time_StampeR(df = Data, id_col = "file_name", sample_rate = 100, protocol_duration = 331, cuts = cuts, period_names = labels)
+#' labels = c("Training",
+#'       "FixationCross",
+#'       "trial1",
+#'       "FixationCross",
+#'       "trial2",
+#'       "FixationCross",
+#'       "trial3",
+#'       "blank")
+#' Data <- Time_StampeR(df = Data,
+#'       id_col = "file_name",
+#'       sample_rate = 100,
+#'       protocol_duration = 331,
+#'       cuts = cuts,
+#'       period_names = labels)
 #'
 #'
 Time_StampeR <- function(df, id_col, sample_rate, protocol_duration, cuts = NULL, period_names = NULL) {

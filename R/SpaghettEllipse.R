@@ -20,9 +20,14 @@
 #' @return a graphical object
 #' @export
 #'
+#' @importFrom scales alpha
+#'
+#'
 #' @examples
-#' path_to_data <- system.file("extdata", package = "BalanceMate") #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
-#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331) # Input correct arguments: in this example, the protocol was 331seconds long and the sample rate was 100Hz
+#' # Find subdirectory of Example data in the original .txt format:
+#' path_to_data <- system.file("extdata", package = "BalanceMate")
+#' # Input correct arguments: here, the protocol is 331seconds long, the sample rate is 100Hz
+#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
 #'
 #' SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataB.txt")
 #' # Currently, it "works", except it outputs an error... but still does the job?

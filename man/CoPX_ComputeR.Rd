@@ -12,7 +12,7 @@ CoPX_ComputeR(My, Fz)
 \item{Fz}{numeric vector specifying the force on the Z-axis}
 }
 \value{
-A numeric vector containing the Center of pressure values on the X-axis
+A numeric vector containing the Center of pressure values (cm) on the X-axis
 }
 \description{
 A function to compute Center of pressure (CoP) values on the medio-lateral axis (X-axis). The function only requires moments of forces on the Y-axis and Force on the Z-axis which are provided in most postural tools outputs.

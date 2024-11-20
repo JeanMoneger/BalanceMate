@@ -9,12 +9,12 @@
 
 A data frame with 33,100 rows and 6 columns:
 \describe{
-\item{Mx}{Un-named column corresponding to Mx}
-\item{My}{Un-named column corresponding to My}
-\item{Mz}{Un-named column corresponding to Mz}
-\item{Fx}{Un-named column corresponding to Fx}
-\item{Fy}{Un-named column corresponding to Fy}
-\item{Fz}{Un-named column corresponding to Fz}
+\item{Mx}{Un-named column corresponding to Mx- moment around the X axis}
+\item{My}{Un-named column corresponding to My- moment around the Y axis}
+\item{Mz}{Un-named column corresponding to Mz- moment around the Z axis}
+\item{Fx}{Un-named column corresponding to Fx- force in the X axis}
+\item{Fy}{Un-named column corresponding to Fy- force in the Y axis}
+\item{Fz}{Un-named column corresponding to Fz- force in the Z axis}
 }
 }
 }
@@ -22,11 +22,7 @@ A data frame with 33,100 rows and 6 columns:
 <Monéger, J., Besche-Richard, C., Chaby, L., & Vergilino-Perez D. (Submitted in Emotion). Should I Stay or Should I go: An Exploration of Spontaneous Postural Behaviours Following Threatening Emotion Perception.>
 }
 \usage{
-```r
-# To load the data from the text file:
-path_to_data <- system.file("extdata", "Postural_DataF.txt", package = "BalanceMate")
-Postural_DataF_txt <- read.table(path_to_data, header = TRUE, sep = "\t")
-```
+# Postural_DataF_txt
 }
 \description{
 A .txt file version of a full block of postural measurement during a session in the Monéger et al. (submitted) experiment. Block duration is 331s, and Sample rate was 100Hz. As such, each block corresponds to a data frame of 33,100 rows with the 6 exported columns from AMTI NetForce, unconveniently un-named. They correspond to Mx, My, Mz, Fx, Fy, Fz.

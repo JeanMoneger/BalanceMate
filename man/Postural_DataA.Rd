@@ -9,12 +9,12 @@
 
 A data frame with 33,100 rows and 6 columns:
 \describe{
-\item{Mx}{Un-named column corresponding to Mx}
-\item{My}{Un-named column corresponding to My}
-\item{Mz}{Un-named column corresponding to Mz}
-\item{Fx}{Un-named column corresponding to Fx}
-\item{Fy}{Un-named column corresponding to Fy}
-\item{Fz}{Un-named column corresponding to Fz}
+\item{Mx}{Un-named column corresponding to Mx - moment around the X axis}
+\item{My}{Un-named column corresponding to My - moment around the Y axis}
+\item{Mz}{Un-named column corresponding to Mz - moment around the Z axis}
+\item{Fx}{Un-named column corresponding to Fx - force in the X axis}
+\item{Fy}{Un-named column corresponding to Fy - force in the Y axis}
+\item{Fz}{Un-named column corresponding to Fz - force in the Z axis}
 }
 }
 }

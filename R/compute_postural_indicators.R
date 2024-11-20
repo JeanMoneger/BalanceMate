@@ -12,15 +12,25 @@
 #' @export
 #'
 #' @examples
-#'
-#' path_to_data <- system.file("extdata", package = "BalanceMate") #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+#'#Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+#' path_to_data <- system.file("extdata", package = "BalanceMate")
 #' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
 #' # Using the Epoch synthesis
-#' result <- compute_postural_indicators(data = Data, CoPX_col = "CoP_X", CoPY_col = "CoP_Y", ID = "file_name",time_col = "Time", epoch_length = 1, indicators = c("CoP_X", "CoP_Y", "SwayPathLength", "EllipseArea", "SD_CoP_X", "SD_CoP_Y"))
+#' result <- compute_postural_indicators(data = Data,
+#'      CoPX_col = "CoP_X",
+#'      CoPY_col = "CoP_Y",
+#'      ID = "file_name",
+#'      time_col = "Time",
+#'      epoch_length = 1,
+#'      indicators = c("CoP_X", "CoP_Y", "SwayPathLength", "EllipseArea", "SD_CoP_X", "SD_CoP_Y"))
 #' print(result)
 #'
 #' # Not using epochs: synthetising at the ID level
-#' result <- compute_postural_indicators(data = Data, CoPX_col = "CoP_X", CoPY_col = "CoP_Y", ID = "file_name", indicators = c("CoP_X", "CoP_Y", "SwayPathLength", "EllipseArea", "SD_CoP_X", "SD_CoP_Y"))
+#' result <- compute_postural_indicators(data = Data,
+#'       CoPX_col = "CoP_X",
+#'       CoPY_col = "CoP_Y",
+#'       ID = "file_name",
+#'       indicators = c("CoP_X", "CoP_Y", "SwayPathLength", "EllipseArea", "SD_CoP_X", "SD_CoP_Y"))
 #' print(result)
 compute_postural_indicators <- function(data, CoPX_col, CoPY_col, ID, time_col = NULL, epoch_length = NULL, indicators) {
   allowed_indicators <- c("CoP_X", "CoP_Y", "SwayPathLength", "EllipseArea", "SD_CoP_X", "SD_CoP_Y")

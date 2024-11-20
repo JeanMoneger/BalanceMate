@@ -33,9 +33,16 @@ a data frame that should be shorter.
 This function will synthetise (i.e., compute the mean of) defined column(s) from a data frame depending on a specified epoch (i.e., a time interval over which we want to synthetise the data).
 }
 \examples{
-path_to_data <- system.file("extdata", package = "BalanceMate") #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+#Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+path_to_data <- system.file("extdata", package = "BalanceMate")
 Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
 
-Epoch_SliceR(df = Data, ID = "file_name", columns_to_synthesize = c("CoP_X", "CoP_Y"), epoch_length = 1, sample_rate=100, session_duration = 331)
+Epoch_SliceR(df = Data,
+      ID = "file_name",
+      columns_to_synthesize = c("CoP_X", "CoP_Y"),
+      epoch_length = 1,
+      sample_rate=100,
+      session_duration = 331)
+
 
 }

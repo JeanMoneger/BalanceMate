@@ -73,7 +73,7 @@ Data<- subset(Data2, Data2$Period_Name != "blank" & Data2$Period_Name != "BLANK"
 
 # Epoch / I need to create a unique identifier for fileName > Trial number
 
-Data3 <- Epoch_SliceR2(df = Data, ID = c("file_name", "Period_Name"), columns_to_synthesize = c("CoP_X","CoP_Y"), epoch_length = 1, sample_rate = 100, session_duration = 10)
+Data3 <- Epoch_SliceR(df = Data, ID = c("file_name", "Period_Name"), columns_to_synthesize = c("CoP_X","CoP_Y"), epoch_length = 1, sample_rate = 100, session_duration = 10)
 sdCopyMean <- sd(Data3$SD_CoP_Y)
 sdCopxMean <- sd(Data3$SD_CoP_X)
 #Specific part B4140514

@@ -11,14 +11,29 @@
 #' @return a data frame with an additional 'ellipse_area' column
 #' @export
 #'
+#' @importFrom grDevices rgb
+#' @importFrom graphics grid legend lines
+#' @importFrom stats aggregate cov qchisq sd
+#' @importFrom utils read.table write.csv
+#'
 #' @examples
-#' path_to_data <- system.file("extdata", package = "BalanceMate") #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+#' #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+#' path_to_data <- system.file("extdata", package = "BalanceMate")
 #' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
 #' compute_ellipse_area(Data, "CoP_X", "CoP_Y", ID = "file_name") # Individual level
 #'
-#' compute_ellipse_area(Data, "CoP_X", "CoP_Y", ID = "file_name", time_col = "Time", epoch_length = 1) # Epochs of 1 second
+#' # Epochs of 1 second
+#' compute_ellipse_area(Data, "CoP_X", "CoP_Y",
+#'       ID = "file_name",
+#'       time_col = "Time",
+#'       epoch_length = 1)
 #'
-#' compute_ellipse_area(Data, "CoP_X", "CoP_Y", ID = "file_name", time_col = "Time", epoch_length = 1, confint = .80) # Epochs of 1 second and 80% confidence Ellipse area
+#'# Epochs of 1 second and 80% confidence Ellipse area
+#' compute_ellipse_area(Data, "CoP_X", "CoP_Y",
+#'       ID = "file_name",
+#'       time_col = "Time",
+#'       epoch_length = 1,
+#'       confint = .80)
 
 #'
 compute_ellipse_area <- function(data, CoPX_col, CoPY_col, ID, time_col = NULL, epoch_length = NULL, confint = .95) {

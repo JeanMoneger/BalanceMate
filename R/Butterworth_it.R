@@ -15,7 +15,10 @@
 #' @importFrom signal butter filtfilt
 #'
 #' @examples
-#' # Assuming 'Data' is your data frame with columns 'CoP_X' and 'CoP_Y'
+#' # Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+#' path_to_data <- system.file("extdata", package = "BalanceMate")
+#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+#'
 #' filtered_data <- Butterworth_it(
 #'   Data = Data,
 #'   cutoff_freq = 5,
@@ -25,8 +28,16 @@
 #'   Colname = c("CoP_X", "CoP_Y")
 #' )
 #' # Visualise results:
-#' plot(x = filtered_data$Time, y = filtered_data$CoP_Y, type ="l", tck = 1, main = "Non filtered")
-#' plot(x = filtered_data$Time, y = filtered_data$CoP_Y_filtered, type ="l", tck = 1, main = "filtered")
+#' plot(x = filtered_data$Time,
+#'       y = filtered_data$CoP_Y,
+#'       type ="l",
+#'       tck = 1,
+#'       main = "Non filtered")
+#' plot(x = filtered_data$Time,
+#'       y = filtered_data$CoP_Y_filtered,
+#'       type ="l",
+#'       tck = 1,
+#'       main = "filtered")
 Butterworth_it <- function(Data, cutoff_freq, filter_order, sampling_rate, type = "low", Colname) {
   # Validate inputs
   if (!is.data.frame(Data)) {

@@ -16,7 +16,7 @@ epoch_data <- Epoch_SliceR(df, "Part", columns_to_synthesize = "CoPY", epoch_len
 library(dplyr)
 df_test<- Time_StampeR(df = df, id_col= "Part", sample_rate = 100, protocol_duration = 10)
 df_test <-subset(df_test, df_test$Time < 1)
-df_test <- df_test %>% group_by(Part) %>% mutate(MeanCop = mean(CoPY, na.rm = T)) %>% distinct(Part, .keep_all=T)
+df_test <- df_test %>% dplyr::group_by(Part) %>% dplyr::mutate(MeanCop = mean(CoPY, na.rm = T)) %>% dplyr::distinct(Part, .keep_all=T)
 
 epoch_data <- Epoch_SliceR(
   df = df,

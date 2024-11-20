@@ -1,3 +1,29 @@
+#' Compute Mean CoP-X and Mean CoP-Y for a specified time bin
+#'
+#' @param data a dataframe containing the postural data
+#' @param CoPX_col a column in the data frame storing the CoP-X data
+#' @param CoPY_col a column in the data frame storing the CoP-Y data
+#' @param ID a column in the data frame storing Participants' unique identifiers
+#' @param time_col a column in the data frame storing Time course
+#' @param epoch_length numeric value: epoch duration over which you want to compute the sway path length (in seconds)
+#'
+#' @return a data frame containing the new postural measures that were synthetised at the ID level or at the epoch level (if specified).
+#' @export
+#'
+#' @examples
+#'#Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+#' path_to_data <- system.file("extdata", package = "BalanceMate")
+#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+#'
+#'# Compute mean CoP-X and mean CoP-Y at the participant (ID level)
+#' Mean_CoP_ComputeR(Data, "CoP_X", "CoP_Y", "file_name")
+#'
+#' # Synthetise CoP-X and CoP-Y for 1s time bins
+#' Mean_CoP_ComputeR(Data, "CoP_X", "CoP_Y", "file_name", time_col = "Time", epoch_length = 1)
+#'
+#' # Synthetise CoP-X and CoP-Y for 2s time bins
+#' Mean_CoP_ComputeR(Data, "CoP_X", "CoP_Y", "file_name", time_col = "Time", epoch_length = 2)
+#'
 Mean_CoP_ComputeR <- function(data, CoPX_col, CoPY_col, ID, time_col = NULL, epoch_length = NULL) {
   # Check if columns exist in the data frame
   if (!(CoPX_col %in% colnames(data))) stop(paste("Column", CoPX_col, "not found in the data frame"))

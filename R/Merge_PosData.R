@@ -1,7 +1,7 @@
 #' Merge and Append your Postural data
 #'
 #' @description
-#' This function merges all .txt files directly exported from the AMTI NetForce software. It re-names columns (un-named by the AMTI software), compute automatically CoP on both the antero-posterior (CoP-Y) and medio-lateral (CoP-X) axes, and add the time course during the session to facilitate further data management
+#' This function merges all .txt files directly exported from the AMTI NetForce software. It re-names columns (un-named by the AMTI software), compute automatically CoP on both the antero-posterior (CoP-Y) and medio-lateral (CoP-X) axes, and add the time course during the session to facilitate further data management. Finally, it saves the resulting output in your file directory.
 #'
 #' @param directory_path directory to a folder containing all the .txt outputs from AMTI Netforce that you wish to merge in a single data set.
 #' @param SampleRate Sample rate used in your protocol
@@ -11,8 +11,11 @@
 #' @export
 #'
 #' @examples
-#' path_to_data <- system.file("extdata", package = "BalanceMate") #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
-#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331) # Input correct arguments: in this example, the protocol was 331seconds long and the sample rate was 100Hz
+#' #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
+#' path_to_data <- system.file("extdata", package = "BalanceMate")
+#'
+#' # Input correct arguments: here, the protocol is 331seconds long, the sample rate is 100Hz
+#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
 Merge_PosData <- function(directory_path, SampleRate, SessionDuration) {
   # Step 1: Create a file list with all postural data files in the specified directory
   file_list <- list.files(path = directory_path, pattern = ".*\\.txt$", recursive = TRUE, full.names = TRUE)
