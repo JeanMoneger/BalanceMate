@@ -16,8 +16,8 @@
 #' @examples
 #' # Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
 #' path_to_data <- system.file("extdata", package = "BalanceMate")
-#' # Input correct arguments: here, the protocol is 331seconds long, the sample rate is 100Hz
-#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+#' # Input correct arguments: here, the protocol is 100s long, the sample rate is 100Hz
+#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 #'
 #' # here session: 30 s training, 3 trials (10 s fix cross + 90 s trial), 1s blank
 #' cuts = c(30, 40, 130, 140, 230, 240, 330)
@@ -32,7 +32,7 @@
 #' Data <- Time_StampeR(df = Data,
 #'       id_col = "file_name",
 #'       sample_rate = 100,
-#'       protocol_duration = 331,
+#'       protocol_duration = 100,
 #'       cuts = cuts,
 #'       period_names = labels)
 #'

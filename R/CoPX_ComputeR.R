@@ -11,7 +11,7 @@
 #' @seealso [CoPY_ComputeR()] for computing CoP-Y values
 #'
 #' @examples path_to_data <- system.file("extdata", package = "BalanceMate")
-#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 #'
 #' CoPX_ComputeR(Data$My, Data$Fz)
 CoPX_ComputeR <- function(My, Fz) {

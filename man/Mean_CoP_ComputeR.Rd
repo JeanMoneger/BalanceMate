@@ -35,7 +35,7 @@ Compute Mean CoP-X and Mean CoP-Y for a specified time bin
 \examples{
 #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
 path_to_data <- system.file("extdata", package = "BalanceMate")
-Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 
 # Compute mean CoP-X and mean CoP-Y at the participant (ID level)
 Mean_CoP_ComputeR(Data, "CoP_X", "CoP_Y", "file_name")

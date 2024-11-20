@@ -54,8 +54,8 @@ A 95\% confidence ellipse will circle 95\% of the data points observed.
 \examples{
 # Find subdirectory of Example data in the original .txt format:
 path_to_data <- system.file("extdata", package = "BalanceMate")
-# Input correct arguments: here, the protocol is 331seconds long, the sample rate is 100Hz
-Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+# Input correct arguments: here, the protocol is 100seconds long, the sample rate is 100Hz
+Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 
 SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataB.txt")
 # Currently, it "works", except it outputs an error... but still does the job?

@@ -23,6 +23,6 @@ This function merges all .txt files directly exported from the AMTI NetForce sof
 #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
 path_to_data <- system.file("extdata", package = "BalanceMate")
 
-# Input correct arguments: here, the protocol is 331seconds long, the sample rate is 100Hz
-Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+# Input correct arguments: here, the protocol is 100seconds long, the sample rate is 100Hz
+Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 }

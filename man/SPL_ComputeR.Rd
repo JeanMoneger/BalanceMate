@@ -38,7 +38,7 @@ If the specified epoch is not a multiple of the protocol duration (e.g., user in
 \examples{
 # Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
 path_to_data <- system.file("extdata", package = "BalanceMate")
-Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 
 SPL_ComputeR(data = Data,
     CoPX_col = "CoP_X",

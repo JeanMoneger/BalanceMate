@@ -19,7 +19,7 @@ A function to compute Center of pressure (CoP) values on the antero-posterioir a
 }
 \examples{
 path_to_data <- system.file("extdata", package = "BalanceMate")
-Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 
 CoPY_ComputeR(Data$Mx, Data$Fz)
 }

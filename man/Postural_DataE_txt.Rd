@@ -7,7 +7,7 @@
 \format{
 \subsection{\code{Postural_DataE}}{
 
-A data frame with 33,100 rows and 6 columns:
+A data frame with 10,000 rows and 6 columns:
 \describe{
 \item{Mx}{Un-named column corresponding to Mx- moment around the X axis}
 \item{My}{Un-named column corresponding to My- moment around the Y axis}
@@ -25,7 +25,7 @@ A data frame with 33,100 rows and 6 columns:
 # Postural_DataE_txt
 }
 \description{
-A .txt file version of a full block of postural measurement during a session in the Monéger et al. (submitted) experiment. Block duration is 331s, and Sample rate was 100Hz. As such, each block corresponds to a data frame of 33,100 rows with the 6 exported columns from AMTI NetForce, unconveniently un-named. They correspond to Mx, My, Mz, Fx, Fy, Fz.
+A .txt file version of a shortened block of postural measurement during a session in the Monéger et al. (submitted) experiment. Block duration is 100 (originally 331s), and Sample rate was 100Hz. As such, each block corresponds to a data frame of 10,000 rows with the 6 exported columns from AMTI NetForce, unconveniently un-named. They correspond to Mx, My, Mz, Fx, Fy, Fz.
 This is a plain text version of the postural data for Block E. It is stored as a .txt file in the \code{inst/extdata} directory of the BalanceMate package.
 }
 \examples{

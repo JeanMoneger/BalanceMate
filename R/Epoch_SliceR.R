@@ -17,14 +17,14 @@
 #' @examples
 #' #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
 #' path_to_data <- system.file("extdata", package = "BalanceMate")
-#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 #'
 #' Epoch_SliceR(df = Data,
 #'       ID = "file_name",
 #'       columns_to_synthesize = c("CoP_X", "CoP_Y"),
 #'       epoch_length = 1,
 #'       sample_rate=100,
-#'       session_duration = 331)
+#'       session_duration = 100)
 #'
 #'
 

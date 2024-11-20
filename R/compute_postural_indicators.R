@@ -14,7 +14,7 @@
 #' @examples
 #'#Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
 #' path_to_data <- system.file("extdata", package = "BalanceMate")
-#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 331)
+#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 #' # Using the Epoch synthesis
 #' result <- compute_postural_indicators(data = Data,
 #'      CoPX_col = "CoP_X",
