@@ -1,0 +1,83 @@
+## BalanceMate package overview
+
+The BalanceMate package was created to facilitate the handling of
+postural data. It was tailored to facilitate the importation of postural
+data exported using an [**AMTI** platform](https://www.amti.biz/) and
+their [software **Netforce**](https://www.amti.biz/product/netforce/).
+
+AMTI platforms are force plates used in research in biophysics as well
+as psychology. Nevertheless, they appear to be designed to help
+practioners assessing patients individually without experimental
+protocol. Researchers, however, may find some difficulties in analyzing
+the output from the NetForce software. In particular:
+
+1.  The software does not allow merging all individual data files into
+    one big data files
+2.  The software outputs minimal information: regarding the bsf file
+    designed to be analysed using the BioAnalasysis prioritary software,
+    the data contains moments and forces and time course; but for the
+    data in text format allowing computation through different
+    softwares, the data contains only moments and forces stored in
+    unlabelled columns
+3.  The BioAnalysis software lacks flexibility and does not allow the
+    computation of postural indicators in specified time intervals
+    (i.e., if the protocol includes a training phase, the AMTI softwares
+    will not allow the distinction between the two phases)
+4.  The BioAnalysis software does not offer transparency in the way
+    postural indicators are calculated. In fact subtle differences in
+    moments and forces between the .bsf outputs and .txt outputs suggest
+    undisclosed transformations occuring in the .bsf data
+5.  The AMTI team offers limited information regarding their softwares
+    (see mysterious point 4)
+
+The `BalanceMate` package aims to provide a toolbox for researchers that
+recognise the use of AMTI forceplates and their softwares but that would
+like to use more flexible and transparent approaches to manage,
+pre-process, and process postural signals. However, **note that this
+package can also be used with postural data collected using different
+platforms**, as long as you have a data frame containing:
+
+-   participants’ unique identifiers
+-   time course for each session
+-   Moments + Forces or CoP-X + CoP-Y
+
+## How to install BalanceMate?
+
+To install BalanceMate from GitHub, use `devtools`:
+
+    # Install devtools if it's not already installed
+    # install.packages("devtools")
+
+    # Install the package
+    devtools::install_github("JeanMoneger/BalanceMate")
+
+    # Load tha package
+    library(BalanceMate)
+
+I aim to submit this package to CRAN, so at some point in time, it is
+possible that this package will be available from a CRAN repo.
+
+## Documentation
+
+For detailed guidance, tutorials, and examples, please refer to the
+[Package Documentation](https://jeanmoneger.com/book/).
+
+## License
+
+This package is under a GPL (&gt;= 3) license.
+
+## Aknowledgments
+
+This package was created and is maintained by **Jean Monéger**. Any
+question should be directed toward Jean Monéger
+(<moneger.jean@outlook.fr>). Development of the package was supported by
+the **laboratory Vision Action Cognition (VAC, URP 7326 - Institut de
+Psychologie, Université Paris Cité)**. The author thanks the VAC
+laboratory for funding this project and providing access to Force plates
+and softwares to test the package.
+
+### Changelog
+
+-   BalanceMate\_0.0.0.9000 – First launch of the package on github
+
+To do: add more tests into the tests section.

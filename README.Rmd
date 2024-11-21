@@ -1,5 +1,5 @@
 ---
-title: "README.Rmd"
+title: "README"
 author: "Jean Monéger"
 date: "`r Sys.Date()`"
 output: html_document
