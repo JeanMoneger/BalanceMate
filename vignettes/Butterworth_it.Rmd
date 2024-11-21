@@ -1,0 +1,156 @@
+---
+title: "Filtering Postural Data Using a Butterworth Filter"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Butterworth_it}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BalanceMate)
+```
+
+## Description
+
+Signal processing often involves removing noise or smoothing data to improve interpretability. In postural data, tiny spikes in signals can complicate analysis. Filtering is a common approach to address these issues, with the Butterworth filter being one of the most popular methods.
+This vignette demonstrates how to use the `Butterworth_it` function from the `BalanceMate` package to apply a Butterworth filter to postural data, including examples of its application.
+
+
+### A short digression on signals
+
+The author of this package being quite naive regarding signal filters (interested readers are re-directed to the `signal` package), it can be noted that -- drawing on the literature on approach and avoidance of (un)pleasant stimuli, some types of filters are more popular than others (see Table X). In particular the most used type of filters would be: No filter at all, a 2nd order low-pass Butterworth filter with a cut-off frequency of 5Hz, and then a 2nd order low-pass Butterworth filter with a cut-off frequency of 10Hz.
+
+
+```{r echo = F, warning = FALSE, message=F}
+# Load the required packages
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+Filter_types_Data <- structure(list(`Filter type` = c(NA, "2nd Order Low-Pass Butterworth Filter (5Hz)", 
+"Low Pass filtered (8Hz)", "2nd Order Butterworth (5Hz)", "low pass filtered (5Hz)", 
+NA, "5-point moving average", "2nd Order Butterworth Filter (10Hz)", 
+NA, NA, NA, NA, NA, "Unknown", "2nd order Butterworth (5Hz cutoff)", 
+NA, "second-order low-pass Butterworth filter with a cutoff frequency of 10Ã\u008a Hz", 
+"2nd Order Butterworth (10Hz)", "2nd Order Low-Pass Butterworth Filter (10Hz)", 
+"15Hz Lowpass filter", "2nd Order Butterworth (5Hz)", "Custom Low-Pass filter", 
+"None", NA, NA, "Unknown", NA, NA, "low pass filtered (10Hz)", 
+"3rd order butterwoth (0.01 - 10Hz)", NA, "low-pass Butterworth filter (cut-off frequency: 5 Hz", 
+"None", NA, NA, "second-order low-pass Butterworth filter with a cutoff frequency of 20Ã\u008a Hz", 
+"None", "low pass filtered (5Hz)", NA, NA, NA, NA, "2nd order butterworth low pass filter 5Hz", 
+NA), Filter_cutOff = c("No filter used", "5Hz", "8Hz", "5Hz", 
+"5Hz", "No filter used", "Other", "10Hz", "No filter used", "No filter used", 
+"No filter used", "No filter used", "No filter used", "No filter used", 
+"5Hz", "No filter used", "10Hz", "10Hz", "10Hz", "15Hz", "5Hz", 
+"Not enough information", "No filter used", "No filter used", 
+"No filter used", "No filter used", "No filter used", "No filter used", 
+"10Hz", "Not enough information", "No filter used", "5Hz", "No filter used", 
+"No filter used", "No filter used", "20Hz", "No filter used", 
+"5Hz", "No filter used", "No filter used", "No filter used", 
+"No filter used", "5Hz", "No filter used"), Filter_Order = c("N/A", 
+"2nd Order", "Unknown", "2nd Order", "Unknown", "N/A", "N/A", 
+"2nd Order", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "2nd Order", 
+"N/A", "2nd Order", "2nd Order", "2nd Order", "Unknown", "2nd Order", 
+"Unknown", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "Unknown", 
+"3rd Order", "N/A", "Unknown", "N/A", "N/A", "N/A", "2nd Order", 
+"N/A", "Unknown", "N/A", "N/A", "N/A", "N/A", "2nd Order", "N/A"
+)), class = "data.frame", row.names = c(NA, -44L))
+
+table1<- table(Filter_types_Data$Filter_cutOff)
+
+# Create a neat HTML table
+kable(table1, format = "html", col.names = c("Cut-off Frequency used", "Number of papers"), table.attr = "style='width:50%;'", caption = "Cut-Off Frequency usage in the literature")
+
+table2<- table(Filter_types_Data$Filter_Order)
+
+# Create a neat HTML table
+kable(table2, format = "html", col.names = c("Order of the filter used", "Number of papers"), table.attr = "style='width:50%;'" , 
+  caption = "Filter's order usage in the literature")
+
+```
+
+Regarding high vs low-pass; it appears all filters either mention explicitly using a low-pass filter, or do not report which type of filter they used.
+
+___
+
+***Note***: *other types of filter where 5-points moving average (n = 1).*
+
+___
+
+### Usage example
+
+Butterworth filter is by far the most used type of filter. It is a wrapper of the `filtfilt` and `butter` commands of the `signal` package. To use it, you need to specify the column(s) you want to filter, indicate the order you want to use, the cut-off frequency for the filter, and whether you would like a high or low-pass filter to be applied.
+
+___
+
+***Note***: *the filter is used on the raw data, before any synthesis is done. It can be applied to the moments and forces (used to compute CoP), or on the CoP itself -- this does not produce much difference from what I have tested. Because the filter is applied on raw data, the computation might take some time for large datasets.*
+
+___
+
+
+Based on the literature and the popularity of this specific filter (see Monéger et al., 2024 [preprint]), you want to use a **2nd order Butterworth filter** with a **cut-off frequency of 5Hz.**
+
+
+
+```{r}
+Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
+filtered_data <- Butterworth_it(
+  Data = Data,
+  cutoff_freq = 5,
+  filter_order = 2,
+  sampling_rate = 100,
+  type = "low",
+  Colname = c("CoP_X", "CoP_Y")
+)
+
+```
+
+The resulting data file contains now one column with the raw untransformed signal and one column with the filtered signal.
+
+We can now compare the original signal to the filtered signal to assess whether the filter did not result in some weird signal. Because we have a lot of data, I only illustrate here what happened in a specific sample of measures in one participant (I however do recommend that users try multiple samples including the beginning and the end of specific trial; see for instance: https://stackoverflow.com/questions/67847747/butterworth-filter-results-in-extreme-outliers-at-start-of-the-signal).
+
+
+```{r, fig.show='hold'}
+# File names
+file_names <- c("Postural_DataB.txt", "Postural_DataA.txt", "Postural_DataD.txt")
+
+# Loop through file names to generate plots side by side
+for (file in file_names) {
+  # Original signal plot
+  plot(
+    x = subset(filtered_data, filtered_data$file_name == file & filtered_data$Time > 30 & filtered_data$Time < 32)$Time,
+    y = subset(filtered_data, filtered_data$file_name == file & filtered_data$Time > 30 & filtered_data$Time < 32)$CoP_Y,
+    type = "l",
+    main = paste("Original Signal:", file),
+    xlab = "Time",
+    ylab = "CoP-Y"
+  )
+  
+  # Filtered signal plot
+  plot(
+    x = subset(filtered_data, filtered_data$file_name == file & filtered_data$Time > 30 & filtered_data$Time < 32)$Time,
+    y = subset(filtered_data, filtered_data$file_name == file & filtered_data$Time > 30 & filtered_data$Time < 32)$CoP_Y_filtered,
+    type = "l",
+    main = paste("Filtered Signal:", file),
+    xlab = "Time",
+    ylab = "CoP-Y"
+  )
+}
+
+```
+
+### Further readings
+
+I recommend reading the documentation of the [`signal`](https://cran.r-project.org/web/packages/signal/index.html) package and the chapter of the [BalanceMate book](https://jeanmoneger.com/book/pre-processing).
+
+
+
+

@@ -30,7 +30,6 @@
 #' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 #'
 #' SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataB.txt")
-#' # Currently, it "works", except it outputs an error... but still does the job?
 SpaghettEllipse <- function(df, participant_id_col = "participant_id", participant_id = NULL,
                             time_col = "Time", time_start = NULL, time_end = NULL,
                             copx_col = "CoP_X", copy_col = "CoP_Y",

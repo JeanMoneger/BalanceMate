@@ -1,0 +1,129 @@
+---
+title: "Time_StampeR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Time_StampeR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BalanceMate)
+```
+
+## Introduction
+
+Often times, several critical periods of interest are nested into one session of measurement. For instance, researchers might have created a protocol including a training phase, they might have used fixation crosses before each trial nested in the session, there might be blanks during the session, and their session might also include trials of different types.
+
+As such, researchers might be interested in annotating their data files to highlight these different periods of interest. These annotations will further facilitate data wrangling by enabling some easy filtering of irrelevant data points (such as training, fixation crosses, or blanks).
+
+The `Time_stampeR` is a command that enables such annotations. To use it, you have to understand the structure of your data. If your sessions contain a large quantity of periods of interest, using `Time_stampeR` might prove challenging, but never impossible.
+
+In some cases where researchers used randomisation of the stimuli presentation, users will have to think outside the box by importing a list of characters that will be used as the labels for each annotations. However, this goes beyond our demonstration. Should you be in need of help in this data wrangling process, you can try to contact the author of the package.
+
+Nevertheless, the `Time_stampeR` command can proves itself very useful in simpler cases (short sessions, or few periods of interest, or no randomisation).
+
+## Example Usage
+
+To use the `Time_stampeR`, you will have to identify manually each periods of interest in each of your sessions (things might be more complicated if your sessions differ in length - fortunately, these cases should be quite exceptionnal). So you should first try to describe 1) the cuts where two periods of interest are separated, and 2) the labels of the periods of interests.
+
+Note that you should identify *x* periods of interest and *x-1* cuts.
+
+For instance, you conducted a study on 6 participants that passively view pleasant and unpleasant pictures for 100s with a sample rate of 100Hz. Each session started with a 20 seconds training, and then there were 4 trials of 20 seconds, each starting with a 5 seconds fixation cross. You structure should look something like this:
+
+```{r echo = F, warning = FALSE, message=F}
+# Load the required packages
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+
+# Define the data
+time_periods <- data.frame(
+  Periods = c("Training (20s)", 
+              "Fixation Cross (5s)", 
+              "Unpleasant trial (15s)", 
+              "Fixation Cross (5s)", 
+              "Pleasant trial (15s)", 
+              "Fixation Cross (5s)", 
+              "Unpleasant trial (15s)", 
+              "Fixation Cross (5s)", 
+              "Pleasant trial (15s)"), 
+  Label = c("Training", "Fix", "Unpl_Trial", "Fix", "Pleas_Trial", "Fix", "Unpl_Trial",
+            "Fix", "Pleas_Trial"),
+  `End Time (s)` = c(20, 
+                     25, 
+                     40, 
+                     45, 
+                     60, 
+                     65, 
+                     80, 
+                     85, 
+                     100)
+)
+
+# Create a neat HTML table
+kable(time_periods, format = "html", col.names = c("Periods of interest", "Label", "End Time (s)"), table.attr = "style='width:50%;'") %>%
+  kable_styling(
+    full_width = FALSE, 
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+    position = "center"
+  ) 
+
+```
+Identified cuts are thus occuring a time 20, t = 25, t = 40, t = 45, t = 60, t = 65, t = 80, and t = 85. 
+
+We now have to use the `Time_stampeR` functions indicating where cuts should happen and how periods of interest should be labelled:
+
+```{r}
+path_to_data <- system.file("extdata", package = "BalanceMate")
+Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+
+# Identify the time cuts in your protocol: 
+cuts<-c(20, 
+        25, 
+        40, 
+        45, 
+        60, 
+        65, 
+        80, 
+        85)
+
+# Label the periods:
+Labels = c("Training", 
+              "Fix", 
+              "Unpleasant_t", 
+              "Fix", 
+              "Pleasant_t", 
+              "Fix", 
+              "Unpleasant_t", 
+              "Fix", 
+              "Pleasant_t")
+
+Annotated_Data <- Time_StampeR(df = Data, id_col = "file_name", sample_rate = 100, protocol_duration = 100, cuts = cuts, period_names = Labels)
+
+head(Annotated_Data)
+
+tail(Annotated_Data)
+
+```
+
+Once this operation has been made on the raw data, it is possible to easily filter only the data points we are interested in by using `subset`:
+
+```{r}
+Crit_Data <- subset(Annotated_Data, Annotated_Data$Period_Name=="Unpleasant_t" | Annotated_Data$Period_Name == "Pleasant_t")
+
+head(Crit_Data)
+
+tail(Crit_Data)
+```
+
+## Further readings
+
+See the [Managing Section of the BalanceMate Guide book](https://jeanmoneger.com/book/managing-1) 

@@ -1,0 +1,137 @@
+---
+title: "Compute X% Confidence Ellipse Area"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{EllipseArea}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BalanceMate)
+```
+
+## Introduction
+
+From a broad perspective, two types of postural indicators can be computed from the `BalanceMate` package: 
+
+- Indicators that measure average displacements (i.e., CoP-X and CoP-Y)
+- Indicators that measure variability in displacements (e.g., Sway Path Length)
+
+Whereas the former family is useful for researchers interested in motivation (approach, and avoidance), the latter is of interest for researchers assessing loss of stability through substance use, or freezing behaviours when facing threat (among other examples).
+
+95% confidence ellipse area are popular indicators of the variability of CoP displacements. A 95% confidence ellipse area will quantify the area (in cm^2) of an ellipse that contains 95% of the data points (see figure below).
+
+```{r}
+path_to_data <- system.file("extdata", package = "BalanceMate")
+#' # Input correct arguments: here, the protocol is 100seconds long, the sample rate is 100Hz
+Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+#'
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataA.txt")
+
+```
+
+
+Details of computation of this indicators can be found in Quijoux et al. (2021).
+
+***Note***: the wrapper function `compute_postural_indicators` can also compute this indicator.
+
+## Example Usage
+
+`compute_ellipse_area` computes the area of the 95% Confidence ellipse at the specified level, either:
+
+- Participant level (1 measure per session)
+- Time-bin level (1 measure per specified time bin).
+
+You collected 6 participants viewing passively some pictures for 100s.
+
+```{r}
+Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
+
+
+```
+
+You can compute the 95% Confidence ellipse area at the participant level :
+
+```{r}
+BalanceMate::compute_ellipse_area(data = Data, 
+                                  CoPX_col = "CoP_X", 
+                                  CoPY_col = "CoP_Y", 
+                                  ID = "file_name")
+```
+
+We see that  participants A, B, and C have large CoP areas. This might require further investigation. We can, for instance, visualise their displacements:
+
+```{r}
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataA.txt", Title = "Participant A")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataB.txt", Title = "Participant B")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataC.txt", Title = "Participant C")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataD.txt", Title = "Participant D")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataE.txt", Title = "Participant E")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataF.txt", Title = "Participant F")
+
+```
+
+Indeed, participants A, B, and C displayed large CoP displacements that resulted in an inflation of their ellipse. It is important to note that sessions for each participants were only 100 seconds long, without training. This would be a risky experimental protocol. It would deserve performing robust analyses or managing outliers. It could also deserve standardisation of the data such as grand mean centering, or using a baseline.
+
+Alternatively, you can compute areas at a specified time bin level. For instance, we want to assess variations in CoP areas between the first, second, third, and fourth sections of the protocol. This would amount to time bins of 25 seconds.
+
+```{r}
+BalanceMate::compute_ellipse_area(data = Data, 
+                                  CoPX_col = "CoP_X", 
+                                  CoPY_col = "CoP_Y", 
+                                  ID = "file_name", 
+                                  time_col = "Time", 
+                                  epoch_length = 25)
+```
+
+This approach gives some insight into the differences between the participants A, B, C (large movements) and participants D, E, F (small movements): zooming in time bins reveal that, although some bins of 25 seconds are associated with more immobility in participants A (Bin 2 and 4), B (bin 2), and C (bin 1), they exhibited generally large movements in other bins, suggesting an individual difference rather than a mere "blip".
+
+Here, if the protocol consisted in a training phase during the 25 first seconds, we could use each measure for the first epoch as a baseline to correct for the variations in the three following periods. Most studies include baseline corrections to account for inter-participant variability. Another possibility is to use mixed models to account for this variance (using participants as a random variable, see Monéger et al., unpublished manuscript [feel free to ask me if the study is still unpublished by the time you read this vignette])
+
+***Note***: The command also contains an argument to modify the percentage of confidence of the ellipse. If for any reason we might prefer a stricter ellipse, we could. For instance, say we want to be more conservative and use a 80% confidence ellipse area:
+
+```{r}
+BalanceMate::compute_ellipse_area(data = Data, 
+                                  CoPX_col = "CoP_X", 
+                                  CoPY_col = "CoP_Y", 
+                                  ID = "file_name", 
+                                  confint = .8)
+```
+
+
+```{r}
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataA.txt",conf_level = .8, Title = "Participant A")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataB.txt", conf_level = .8,Title = "Participant B")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataC.txt",conf_level = .8, Title = "Participant C")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataD.txt",conf_level = .8, Title = "Participant D")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataE.txt",conf_level = .8, Title = "Participant E")
+
+SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataF.txt",conf_level = .8, Title = "Participant F")
+
+```
+
+## Further readings
+
+Quijoux, F., Nicolaï, A., Chairi, I., Bargiotas, I., Ricard, D., Yelnik, A., Oudre, L., Bertin-Hugault, F., Vidal, P. P., Vayatis, N., Buffat, S., & Audiffren, J. (2021). A review of center of pressure (COP) variables to quantify standing balance in elderly people: Algorithms and open-access code. *Physiological reports, 9*(22), e15067. https://doi.org/10.14814/phy2.15067 
+
+
+Monéger, J., Chaby, L., Besche-Richard, C., & Vergilino-Perez, D. (submitted in Emotion). Should I Stay or Should I go: An Exploration of Spontaneous Postural Behaviours Following Threatening Emotion Perception.
+
+See also the [Processing chapter of the BalanceMate guide book](https://jeanmoneger.com/book/processing)

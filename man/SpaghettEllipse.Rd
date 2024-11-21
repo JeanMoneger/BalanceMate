@@ -58,5 +58,4 @@ path_to_data <- system.file("extdata", package = "BalanceMate")
 Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 
 SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataB.txt")
-# Currently, it "works", except it outputs an error... but still does the job?
 }

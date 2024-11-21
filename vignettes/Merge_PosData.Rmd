@@ -1,0 +1,56 @@
+---
+title: "Merge and Structure postural data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Merge_PosData}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BalanceMate)
+```
+
+## Description
+
+The typical output of postural software such as **NetForce** only include minimal data: the raw moments and forces with un-named columns:
+
+```{r}
+data("Postural_DataA")
+head(Postural_DataA)
+```
+
+In addition, all data files are issued as separate files.
+
+Researchers might want 1) merge each data files together (and label them in an additional column), 2) label the unlabeled columns, 3) compute more useful variables such as CoP-X and CoP-Y, 4) add a time variable that will track the passage of time with each data points.
+
+The `Merge_PosData` command does just that. It is a great tool to manage and structure postural data. In addition, it also allows you to automatically save the resulting file in your directory (default is to not save the data).
+
+## Example usage
+
+You collected data from 6 participants who passively viewed pictures with a sample rate of 100Hz. Now you have 6 files with 10000 rows stored in a folder on your computer. Upon opening a file, you realise there isn't much information in it.
+
+You first want to identify the path to your folder. In this example, the files are stored in the folder "extdata" in the package "BalanceMate"; but your path could be something like "User/Desktop/PostureData".
+
+```{r}
+path_to_data <- system.file("extdata", package = "BalanceMate")
+Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+
+head(Data)
+```
+
+Your data file is now more structured. You could also want to save your datafile in the same directory by adding the argument `write_csv = T`.
+
+Moreover, it is notable that the `Merge_PosData` does not *require* the `SessionDuration` argument: it will compute the time flow based on the length of the data file(s) and the sample rate. This is fortunate for researchers who might use sessions of different lenghts. However, in the cases where researchers use sessions of similar lengths, it is recommended to use the `SessionDuration` argument as it will output an error if the *expected duration* (indicated in `SessionDuration`) does not match the *actual duration* (identified through the length of the data file and sampling rate). This can be very useful and alert you that you have the structure of your file(s) wrong.
+
+## Further reading
+
+The [Managing section of the BalanceMate guide book](https://jeanmoneger.com/book/managing-1)
+

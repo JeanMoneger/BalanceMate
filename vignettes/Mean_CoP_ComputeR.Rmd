@@ -1,0 +1,48 @@
+---
+title: "Compute Mean CoP displacements"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mean_CoP_ComputeR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BalanceMate)
+```
+
+## Introduction
+
+From a broad perspective, two types of postural indicators can be computed from the `BalanceMate` package: 
+
+- Indicators that measure average displacements (i.e., CoP-X and CoP-Y)
+- Indicators that measure variability in displacements (e.g., Sway Path Length)
+
+Whereas the former family is useful for researchers interested in motivation (approach, and avoidance), the latter is of interest for researchers assessing loss of stability through substance use, or freezing behaviours when facing threat (among other examples).
+
+The mean CoP-X and Mean CoP-Y at a pre-specified time bin level (or at a participant level) can be computed from a list of CoP . It works similarly as the `Epoch_SliceR` but with the sole purpose of computing average CoP. This command can also be particularly useful for some data wrangling cases.
+
+## Example Usage
+
+You collected the data of 6 participants who viewed passively pictures for 100 seconds with a sample rate if 100Hz. You are interested in the mean CoP-Y and CoP-X displacements during the first half of the session (pleasant pictures) and the last half of the sessions (unpleasant pictures).
+
+```{r}
+path_to_data <- system.file("extdata", package = "BalanceMate")
+Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+
+
+BalanceMate::Mean_CoP_ComputeR(data = Data, CoPX_col = "CoP_X", CoPY_col = "CoP_Y", ID = "file_name", time_col = "Time", epoch_length = 50)
+```
+
+***Note***: the `Merge_PosData` automatically computes CoP for each data points, as well as the Time course for each session.
+
+## Further readings
+
+See ["Processing" chapter in the BalanceMate Guide book](https://jeanmoneger.com/book/processing)

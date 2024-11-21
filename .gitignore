@@ -11,3 +11,4 @@ inst/extdata/OutPut_Postural_Data.csv
 ^.*\\.Rproj$
 ^README\\.Rmd$
 ^README\\.html$
+inst/doc
