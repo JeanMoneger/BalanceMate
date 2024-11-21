@@ -6,7 +6,7 @@
 #' @param directory_path directory to a folder containing all the .txt outputs from AMTI Netforce that you wish to merge in a single data set.
 #' @param SampleRate Sample rate used in your protocol
 #' @param SessionDuration Duration of your protocol (optionnal)
-#' @param save_csv Logical. If TRUE, the merged data is saved as a CSV file in the same directory. Default is FALSE.
+#' @param write_csv Logical. If TRUE, the merged data is saved as a CSV file in the same directory. Default is FALSE.
 #'
 #' @return a dataframe containing all merged postural files, with additional columns: CoP-Y, CoP-X, time course, and file name.
 #' @export

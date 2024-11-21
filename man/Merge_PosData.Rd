@@ -18,7 +18,7 @@ Merge_PosData(
 
 \item{SessionDuration}{Duration of your protocol (optionnal)}
 
-\item{save_csv}{Logical. If TRUE, the merged data is saved as a CSV file in the same directory. Default is FALSE.}
+\item{write_csv}{Logical. If TRUE, the merged data is saved as a CSV file in the same directory. Default is FALSE.}
 }
 \value{
 a dataframe containing all merged postural files, with additional columns: CoP-Y, CoP-X, time course, and file name.
