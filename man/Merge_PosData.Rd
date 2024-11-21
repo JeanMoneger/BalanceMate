@@ -4,7 +4,12 @@
 \alias{Merge_PosData}
 \title{Merge and Append your Postural data}
 \usage{
-Merge_PosData(directory_path, SampleRate, SessionDuration = NULL)
+Merge_PosData(
+  directory_path,
+  SampleRate,
+  SessionDuration = NULL,
+  write_csv = FALSE
+)
 }
 \arguments{
 \item{directory_path}{directory to a folder containing all the .txt outputs from AMTI Netforce that you wish to merge in a single data set.}
@@ -12,12 +17,14 @@ Merge_PosData(directory_path, SampleRate, SessionDuration = NULL)
 \item{SampleRate}{Sample rate used in your protocol}
 
 \item{SessionDuration}{Duration of your protocol (optionnal)}
+
+\item{save_csv}{Logical. If TRUE, the merged data is saved as a CSV file in the same directory. Default is FALSE.}
 }
 \value{
 a dataframe containing all merged postural files, with additional columns: CoP-Y, CoP-X, time course, and file name.
 }
 \description{
-This function merges all .txt files directly exported from the AMTI NetForce software. It re-names columns (un-named by the AMTI software), compute automatically CoP on both the antero-posterior (CoP-Y) and medio-lateral (CoP-X) axes, and add the time course during the session to facilitate further data management. Finally, it saves the resulting output in your file directory. Note that the SessionDuaration argument is optionnal and only serves the purpose of verifying data integrity: if you have sessions of different length, you should not use it. However if your sessions are supposed to be of equal length, then it might make sense to use the argument in order to assess whether the number of rows expected from Sample rate and Session duration match the Actual duration of the sessions.
+This function merges all .txt files directly exported from the AMTI NetForce software. It re-names columns (un-named by the AMTI software), compute automatically CoP on both the antero-posterior (CoP-Y) and medio-lateral (CoP-X) axes, and add the time course during the session to facilitate further data management. Finally, it optionnally saves the resulting output in your file directory. Note that the SessionDuaration argument is optionnal and only serves the purpose of verifying data integrity: if you have sessions of different length, you should not use it. However if your sessions are supposed to be of equal length, then it might make sense to use the argument in order to assess whether the number of rows expected from Sample rate and Session duration match the Actual duration of the sessions.
 }
 \examples{
 #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software

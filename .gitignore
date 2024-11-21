@@ -6,4 +6,8 @@
 .quarto
 docs
 ^BalanceMate\.Rproj$
-
+data-raw/
+inst/extdata/OutPut_Postural_Data.csv
+^.*\\.Rproj$
+^README\\.Rmd$
+^README\\.html$
