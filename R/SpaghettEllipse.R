@@ -37,7 +37,10 @@ SpaghettEllipse <- function(df, participant_id_col = "participant_id", participa
                             Title = "Spaghetti Plot with 95% Confidence Ellipse",
                             xlab = "Mean CoP_X", ylab = "Mean CoP_Y", conf_level = 0.95) {
   # Ensure the specified columns exist in the dataframe
-  required_cols <- c(time_col, copx_col, copy_col, participant_id_col)
+  required_cols <- c(time_col, copx_col, copy_col)
+  if (!is.null(participant_id)) {
+    required_cols <- c(required_cols, participant_id_col)
+  }
   missing_cols <- setdiff(required_cols, names(df))
   if (length(missing_cols) > 0) {
     stop(paste("The following specified columns do not exist in the dataframe:", paste(missing_cols, collapse = ", ")))
@@ -50,15 +53,6 @@ SpaghettEllipse <- function(df, participant_id_col = "participant_id", participa
       stop("No data found for the specified participant ID.")
     }
   }
-
-  # Filter the dataframe based on time range if provided
-  if (!is.null(time_start) && !is.null(time_end)) {
-    df <- df[df[[time_col]] >= time_start & df[[time_col]] <= time_end, ]
-    if (nrow(df) == 0) {
-      stop("No data found in the specified time range.")
-    }
-  }
-
   # Aggregate the data to compute mean CoP_X and CoP_Y for each time point
   data2 <- aggregate(df[, c(copx_col, copy_col)],
                      by = list(Time = df[[time_col]]),
