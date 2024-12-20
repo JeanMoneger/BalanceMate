@@ -16,6 +16,10 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(BalanceMate)
+  library(knitr)
+  library(kableExtra)
+  library(ggplot2)
+
 ```
 
 ## Description
@@ -31,9 +35,17 @@ The author of this package being quite naive regarding signal filters (intereste
 
 ```{r echo = F, warning = FALSE, message=F}
 # Load the required packages
-library(knitr)
-library(kableExtra)
-library(tidyverse)
+
+# if (requireNamespace("knitr", quietly = TRUE)) {
+#   library(knitr)
+# }
+# if (requireNamespace("kableExtra", quietly = TRUE)) {
+#   library(kableExtra)
+# }
+# if (requireNamespace("ggplot2", quietly = TRUE)) {
+#   library(ggplot2)
+# }
+
 
 Filter_types_Data <- structure(list(`Filter type` = c(NA, "2nd Order Low-Pass Butterworth Filter (5Hz)", 
 "Low Pass filtered (8Hz)", "2nd Order Butterworth (5Hz)", "low pass filtered (5Hz)", 
@@ -67,12 +79,12 @@ NA), Filter_cutOff = c("No filter used", "5Hz", "8Hz", "5Hz",
 table1<- table(Filter_types_Data$Filter_cutOff)
 
 # Create a neat HTML table
-kable(table1, format = "html", col.names = c("Cut-off Frequency used", "Number of papers"), table.attr = "style='width:50%;'", caption = "Cut-Off Frequency usage in the literature")
+kableExtra::kable(table1, format = "html", col.names = c("Cut-off Frequency used", "Number of papers"), table.attr = "style='width:50%;'", caption = "Cut-Off Frequency usage in the literature")
 
 table2<- table(Filter_types_Data$Filter_Order)
 
 # Create a neat HTML table
-kable(table2, format = "html", col.names = c("Order of the filter used", "Number of papers"), table.attr = "style='width:50%;'" , 
+kableExtra::kable(table2, format = "html", col.names = c("Order of the filter used", "Number of papers"), table.attr = "style='width:50%;'" , 
   caption = "Filter's order usage in the literature")
 
 ```
@@ -98,10 +110,40 @@ ___
 
 Based on the literature and the popularity of this specific filter (see Monéger et al., 2024 [preprint]), you want to use a **2nd order Butterworth filter** with a **cut-off frequency of 5Hz.**
 
-
+*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
 
 ```{r}
-Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
+#Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
+
+# If required: convert Rdata to txt files:
+files <- list(
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+)
+
+# Loop through each file, add a blank row with spaces, and save as .txt
+for (name in names(files)) {
+    # Load the .Rdata file
+    load(files[[name]])
+    
+    # Dynamically get the object loaded (assuming it's named the same as the file)
+    data <- get(name)
+    
+    # Add a "blank" row (spaces for all cells) at the top
+    #blank_row <- rep(" ", 6)  # Create a row of spaces with the same number of columns
+    #data <- rbind(blank_row, data)
+    
+    # Write to a .txt file with the same name
+    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+}
+
+Data<-Merge_PosData(".", SampleRate = 100, SessionDuration = 100)
+
+
 filtered_data <- Butterworth_it(
   Data = Data,
   cutoff_freq = 5,
@@ -152,5 +194,16 @@ for (file in file_names) {
 I recommend reading the documentation of the [`signal`](https://cran.r-project.org/web/packages/signal/index.html) package and the chapter of the [BalanceMate book](https://jeanmoneger.com/book/pre-processing).
 
 
+
+```{r, include = FALSE}
+dir<-getwd()
+unlink(paste0(dir,"/Postural_DataA.txt"))
+unlink(paste0(dir,"/Postural_DataB.txt"))
+unlink(paste0(dir,"/Postural_DataC.txt"))
+unlink(paste0(dir,"/Postural_DataD.txt"))
+unlink(paste0(dir,"/Postural_DataE.txt"))
+unlink(paste0(dir,"/Postural_DataF.txt"))
+
+```
 
 

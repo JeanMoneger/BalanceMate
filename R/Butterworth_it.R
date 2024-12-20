@@ -16,8 +16,29 @@
 #'
 #' @examples
 #' # Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
-#' path_to_data <- system.file("extdata", package = "BalanceMate")
-#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+#' # Note: we need to convert compressed rdata to original txt file
+#' files <- paste0("Postural_Data", LETTERS[1:6])
+#'
+#' # Locate the directory containing the .Rdata files within the package
+#' data_dir <- system.file("data", package = "BalanceMate")
+#'
+#' # Create a temporary directory to store the .txt files
+#' temp_data_dir <- file.path(tempdir(), "data")
+#' dir.create(temp_data_dir, showWarnings = FALSE)
+#'
+#' # Process each file: load, optionally add a blank row, and write to .txt
+#' lapply(files, function(f) {
+#'   # Load the .Rdata file from the package's extdata directory
+#'   load(file.path(data_dir, paste0(f, ".Rdata")))
+#'
+#'   data <- get(f)
+#'   # Write the data to a .txt file in the temporary directory
+#'   write.table(data, file = file.path(temp_data_dir, paste0(f, ".txt")), sep = ",",
+#'   row.names = FALSE, col.names = FALSE, quote = FALSE)
+#' })
+#'
+#' Data <- Merge_PosData(temp_data_dir, SampleRate = 100, SessionDuration = 100)
+#'
 #'
 #' filtered_data <- Butterworth_it(
 #'   Data = Data,
@@ -28,13 +49,13 @@
 #'   Colname = c("CoP_X", "CoP_Y")
 #' )
 #' # Visualise results:
-#' plot(x = filtered_data$Time,
-#'       y = filtered_data$CoP_Y,
+#' plot(x = filtered_data[500:700,]$Time,
+#'       y = filtered_data[500:700,]$CoP_Y,
 #'       type ="l",
 #'       tck = 1,
 #'       main = "Non filtered")
-#' plot(x = filtered_data$Time,
-#'       y = filtered_data$CoP_Y_filtered,
+#' plot(x = filtered_data[500:700,]$Time,
+#'       y = filtered_data[500:700,]$CoP_Y_filtered,
 #'       type ="l",
 #'       tck = 1,
 #'       main = "filtered")

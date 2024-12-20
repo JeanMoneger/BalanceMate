@@ -37,11 +37,38 @@ The `Merge_PosData` command does just that. It is a great tool to manage and str
 
 You collected data from 6 participants who passively viewed pictures with a sample rate of 100Hz. Now you have 6 files with 10000 rows stored in a folder on your computer. Upon opening a file, you realise there isn't much information in it.
 
-You first want to identify the path to your folder. In this example, the files are stored in the folder "extdata" in the package "BalanceMate"; but your path could be something like "User/Desktop/PostureData".
+You first want to identify the path to your folder. In this example, the files are stored as Rdata in the "data" folder in the package "BalanceMate"; but your path could be something like "User/Desktop/PostureData".
+
+*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
 
 ```{r}
-path_to_data <- system.file("extdata", package = "BalanceMate")
-Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+# If required: convert Rdata to text files.
+setwd("/Users/sylviemoneger/Desktop/BalanceMate/data")
+files <- list(
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+)
+
+# Loop through each file, add a blank row with spaces, and save as .txt
+for (name in names(files)) {
+    # Load the .Rdata file
+    load(files[[name]])
+    
+    # Dynamically get the object loaded (assuming it's named the same as the file)
+    data <- get(name)
+    
+    # Write to a .txt file with the same name
+    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+}
+
+path_to_data <- getwd() # Adjust directory as required
+
+Data<-Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100) # Adjust directory as required
+
 
 head(Data)
 ```
@@ -53,4 +80,16 @@ Moreover, it is notable that the `Merge_PosData` does not *require* the `Session
 ## Further reading
 
 The [Managing section of the BalanceMate guide book](https://jeanmoneger.com/book/managing-1)
+
+
+```{r, include = FALSE}
+dir<-getwd()
+unlink(paste0(dir,"/Postural_DataA.txt"))
+unlink(paste0(dir,"/Postural_DataB.txt"))
+unlink(paste0(dir,"/Postural_DataC.txt"))
+unlink(paste0(dir,"/Postural_DataD.txt"))
+unlink(paste0(dir,"/Postural_DataE.txt"))
+unlink(paste0(dir,"/Postural_DataF.txt"))
+
+```
 

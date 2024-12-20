@@ -33,9 +33,37 @@ The mean CoP-X and Mean CoP-Y at a pre-specified time bin level (or at a partici
 
 You collected the data of 6 participants who viewed passively pictures for 100 seconds with a sample rate if 100Hz. You are interested in the mean CoP-Y and CoP-X displacements during the first half of the session (pleasant pictures) and the last half of the sessions (unpleasant pictures).
 
+*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+
 ```{r}
-path_to_data <- system.file("extdata", package = "BalanceMate")
-Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+#path_to_data <- system.file("extdata", package = "BalanceMate")
+#Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+
+# If required: convert Rdata to text files.
+
+files <- list(
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+)
+
+# Loop through each file, add a blank row with spaces, and save as .txt
+for (name in names(files)) {
+    # Load the .Rdata file
+    load(files[[name]])
+    
+    # Dynamically get the object loaded (assuming it's named the same as the file)
+    data <- get(name)
+    
+    # Write to a .txt file with the same name
+    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+}
+
+Data<-Merge_PosData(".", SampleRate = 100, SessionDuration = 100)
+
 
 
 BalanceMate::Mean_CoP_ComputeR(data = Data, CoPX_col = "CoP_X", CoPY_col = "CoP_Y", ID = "file_name", time_col = "Time", epoch_length = 50)
@@ -46,3 +74,15 @@ BalanceMate::Mean_CoP_ComputeR(data = Data, CoPX_col = "CoP_X", CoPY_col = "CoP_
 ## Further readings
 
 See ["Processing" chapter in the BalanceMate Guide book](https://jeanmoneger.com/book/processing)
+
+
+```{r, include = FALSE}
+dir<-getwd()
+unlink(paste0(dir,"/Postural_DataA.txt"))
+unlink(paste0(dir,"/Postural_DataB.txt"))
+unlink(paste0(dir,"/Postural_DataC.txt"))
+unlink(paste0(dir,"/Postural_DataD.txt"))
+unlink(paste0(dir,"/Postural_DataE.txt"))
+unlink(paste0(dir,"/Postural_DataF.txt"))
+
+```

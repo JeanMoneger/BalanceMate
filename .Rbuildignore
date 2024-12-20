@@ -5,3 +5,23 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+.Rproj.user
+.Rhistory
+.httr-oauth
+.DS_Store
+.quarto
+^BalanceMate\.Rproj$
+data-raw/
+inst/extdata/OutPut_Postural_Data.csv
+^.*\\.Rproj$
+^README\\.Rmd$
+^README\\.html$
+^docs/search.json$
+README.Rmd
+README.html
+-e file1.txt
+file2.txt
+test.txt
+^doc$
+^Meta$
+^data/.*\.txt$

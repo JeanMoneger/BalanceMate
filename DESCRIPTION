@@ -12,9 +12,6 @@ Imports:
     graphics,
     stats,
     utils
-suggests:
-    dplyr (>= 1.1.4),
-    tidyverse (>= 2.0.0)
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -24,6 +21,10 @@ BugReports: https://github.com/JeanMoneger/BalanceMate/issues
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    dplyr (>= 1.1.4),
+    tidyverse (>= 2.0.0),
+    ggplot2 (>= 3.5.1),
+    kableExtra (>= 1.4.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

@@ -30,9 +30,39 @@ The `SpaghettEllipse` command will output a spaghetti plot coupled with the X% c
 
 You collected the data of 6 participants who viewed passively pictures for 100 seconds with a sample rate if 100Hz. You now want to assess displacements for each participants. 
 
+*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+
 ```{r}
-path_to_data <- system.file("extdata", package = "BalanceMate")
-Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+#path_to_data <- system.file("extdata", package = "BalanceMate")
+#Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+
+# If required: convert Rdata to text files.
+#setwd("/Users/sylviemoneger/Desktop/BalanceMate/data")
+files <- list(
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+)
+
+# Loop through each file, add a blank row with spaces, and save as .txt
+for (name in names(files)) {
+    # Load the .Rdata file
+    load(files[[name]])
+    
+    # Dynamically get the object loaded (assuming it's named the same as the file)
+    data <- get(name)
+    
+    # Write to a .txt file with the same name
+    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+}
+
+path_to_data <- system.file("data", package = "BalanceMate")
+
+Data<-Merge_PosData(".", SampleRate = 100, SessionDuration = 100)
+
 
 SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataA.txt", Title = "Participant A")
 
@@ -52,8 +82,8 @@ SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postur
 However, you might also be interested in a specific sample of those displacements, say between the 10th second and the 90th second. This can be done using the arguments `time_col` to specify the column containing the time stamp for each data points, and the the `time_start` and `time_end` arguments to indicate the limits between which you want to plot your spaghetti.
 
 ```{r}
-path_to_data <- system.file("extdata", package = "BalanceMate")
-Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+#path_to_data <- system.file("extdata", package = "BalanceMate")
+#Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 
 SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataA.txt", time_col = "Time", time_start = 10, time_end = 90, Title = "Participant A")
 
@@ -73,3 +103,14 @@ But you might also prefer to plot more complex sway paths. For instance, if your
 
 ## Further readings
 See the the  subsection on [Visualisation in the Balance mate guide book](https://jeanmoneger.com/book/processing#visualise).
+
+```{r, include = FALSE}
+dir<-getwd()
+unlink(paste0(dir,"/Postural_DataA.txt"))
+unlink(paste0(dir,"/Postural_DataB.txt"))
+unlink(paste0(dir,"/Postural_DataC.txt"))
+unlink(paste0(dir,"/Postural_DataD.txt"))
+unlink(paste0(dir,"/Postural_DataE.txt"))
+unlink(paste0(dir,"/Postural_DataF.txt"))
+
+```

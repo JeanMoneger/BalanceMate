@@ -12,8 +12,28 @@
 #'
 #' @examples
 #' #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
-#' path_to_data <- system.file("extdata", package = "BalanceMate")
-#' Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+#' # Note: we need to convert compressed rdata to original txt file
+#' files <- paste0("Postural_Data", LETTERS[1:6])
+#'
+#' # Locate the directory containing the .Rdata files within the package
+#' data_dir <- system.file("data", package = "BalanceMate")
+#'
+#' # Create a temporary directory to store the .txt files
+#' temp_data_dir <- file.path(tempdir(), "data")
+#' dir.create(temp_data_dir, showWarnings = FALSE)
+#'
+#' # Process each file: load, optionally add a blank row, and write to .txt
+#' lapply(files, function(f) {
+#'   # Load the .Rdata file from the package's extdata directory
+#'   load(file.path(data_dir, paste0(f, ".Rdata")))
+#'
+#'   data <- get(f)
+#'   # Write the data to a .txt file in the temporary directory
+#'   write.table(data, file = file.path(temp_data_dir, paste0(f, ".txt")), sep = ",",
+#'   row.names = FALSE, col.names = FALSE, quote = FALSE)
+#' })
+#'
+#' Data <- Merge_PosData(temp_data_dir, SampleRate = 100, SessionDuration = 100)
 #'
 #' # Compute mean SD CoP-X and mean SD CoP-Y at the participant (ID level):
 #' SD_CoP_ComputeR(Data, "CoP_X", "CoP_Y", "file_name")
@@ -49,7 +69,15 @@ SD_CoP_ComputeR <- function(data, CoPX_col, CoPY_col, ID, time_col = NULL, epoch
 
   # Incomplete epoch warning
   if (!is.null(epoch_length) && !is.null(time_col)) {
-    if (((nrow(data)/length(table(participant_id)))/100/epoch_length) %% 1 != 0) {
+    time <- data[[time_col]]
+    num_participants <- length(table(participant_id))
+    rows_per_participant <- nrow(data) / num_participants
+
+    # Compute sample rate
+    sample_rate <- (rows_per_participant - 1) / (max(time) - min(time))
+
+    # Check for unbalanced epochs
+    if (((rows_per_participant) / sample_rate / epoch_length) %% 1 != 0) {
       warning("Unbalanced epochs detected -- Epoch is not a multiple of protocol duration")
     }
   }

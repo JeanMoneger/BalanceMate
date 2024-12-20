@@ -12,3 +12,7 @@ inst/extdata/OutPut_Postural_Data.csv
 ^README\\.Rmd$
 ^README\\.html$
 inst/doc
+^docs$
+^docs/search.json$
+/doc/
+/Meta/
