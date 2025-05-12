@@ -1,0 +1,20 @@
+pandoc: 3.1.1
+pkgdown: 2.1.2
+pkgdown_sha: ~
+articles:
+  Butterworth_it: Butterworth_it.html
+  Compute_Postural_Indicators: Compute_Postural_Indicators.html
+  CoPX_ComputeR: CoPX_ComputeR.html
+  CoPY_ComputeR: CoPY_ComputeR.html
+  EllipseArea: EllipseArea.html
+  Epoch_SliceR: Epoch_SliceR.html
+  Mean_CoP_ComputeR: Mean_CoP_ComputeR.html
+  Merge_PosData: Merge_PosData.html
+  SD_CoP_ComputeR: SD_CoP_ComputeR.html
+  SpaghettEllipse: SpaghettEllipse.html
+  SPL_ComputeR: SPL_ComputeR.html
+  Time_StampeR: Time_StampeR.html
+last_built: 2025-05-12T16:02Z
+urls:
+  reference: https://jeanmoneger.github.io/BalanceMate/reference
+  article: https://jeanmoneger.github.io/BalanceMate/articles
