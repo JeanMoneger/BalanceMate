@@ -28,14 +28,14 @@ To use the `Epoch_SliceR`, you will need to determine the columns of your data y
 
 In a study with 6 participants, where you measured body sway for 100 seconds with a sample rate of 100Hz, you would like to synthetise the output in more comprehensible time bins of 1s.
 
-*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+*Note: the files are stored as RData to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert RData to text files before running the examples*
 
 ```{r}
 # 1. Locate the installed extdata/ folder (contains only .RData now)
 path_extdata <- system.file("extdata", package = "BalanceMate")
 
 # 2. Find all .RData (case‐insensitive)
-rdata_files <- list.files(
+RData_files <- list.files(
   path_extdata,
   pattern    = "\\.[Rr][Dd]ata$",
   full.names = TRUE
@@ -43,7 +43,7 @@ rdata_files <- list.files(
 
 # 3. Convert each .RData to a .txt in a temp directory
 tmpdir <- tempdir()
-for (f in rdata_files) {
+for (f in RData_files) {
   load(f)  # e.g. loads object “Postural_DataA” into your session
   nm <- tools::file_path_sans_ext(basename(f))
   write.table(

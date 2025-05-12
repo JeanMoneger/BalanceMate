@@ -29,27 +29,27 @@ Whereas the former family is useful for researchers interested in motivation (ap
 
 95% confidence ellipse area are popular indicators of the variability of CoP displacements. A 95% confidence ellipse area will quantify the area (in cm^2) of an ellipse that contains 95% of the data points (see figure below).
 
-*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+*Note: the files are stored as RData to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert RData to text files before running the examples*
 
 ```{r}
 #path_to_data <- system.file("extdata", package = "BalanceMate")
 #' # Input correct arguments: here, the protocol is 100seconds long, the sample rate is 100Hz
 #Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 
-# If required: convert Rdata to text files.
+# If required: convert RData to text files.
 
 files <- list(
-    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
-    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
-    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
-    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
-    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
-    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.RData",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.RData",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.RData",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.RData",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.RData",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.RData"
 )
 
 # Loop through each file, add a blank row with spaces, and save as .txt
 for (name in names(files)) {
-    # Load the .Rdata file
+    # Load the .RData file
     load(files[[name]])
     
     # Dynamically get the object loaded (assuming it's named the same as the file)
@@ -85,17 +85,17 @@ You collected 6 participants viewing passively some pictures for 100s.
 #Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
 
 files <- list(
-    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
-    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
-    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
-    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
-    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
-    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.RData",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.RData",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.RData",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.RData",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.RData",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.RData"
 )
 
 # Loop through each file, add a blank row with spaces, and save as .txt
 for (name in names(files)) {
-    # Load the .Rdata file
+    # Load the .RData file
     load(files[[name]])
     
     # Dynamically get the object loaded (assuming it's named the same as the file)
@@ -183,7 +183,7 @@ SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postur
 
 ## Further readings
 
-Quijoux, F., Nicolaï, A., Chairi, I., Bargiotas, I., Ricard, D., Yelnik, A., Oudre, L., Bertin-Hugault, F., Vidal, P. P., Vayatis, N., Buffat, S., & Audiffren, J. (2021). A review of center of pressure (COP) variables to quantify standing balance in elderly people: Algorithms and open-access code. *Physiological reports, 9*(22), e15067. https://doi.org/10.14814/phy2.15067 
+Quijoux, F., Nicolaï, A., Chairi, I., Bargiotas, I., Ricard, D., Yelnik, A., Oudre, L., Bertin-Hugault, F., Vidal, P. P., Vayatis, N., Buffat, S., & Audiffren, J. (2021). A review of center of pressure (COP) variables to quantify standing balance in elderly people: Algorithms and open-access code. *Physiological reports, 9*(22), e15067. doi: 10.14814/phy2.15067 
 
 
 Monéger, J., Chaby, L., Besche-Richard, C., & Vergilino-Perez, D. (submitted in Emotion). Should I Stay or Should I go: An Exploration of Spontaneous Postural Behaviours Following Threatening Emotion Perception.

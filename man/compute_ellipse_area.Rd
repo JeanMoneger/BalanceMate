@@ -37,20 +37,20 @@ Compute X\% ellipse area (cm.cm)
 }
 \examples{
 #Find subdirectory of Example data in the original .txt format exported from AMTI Netforce software
-# Note: we need to convert compressed rdata to original txt file
+# Note: we need to convert compressed RData to original txt file
 files <- paste0("Postural_Data", LETTERS[1:6])
 
-# Locate the directory containing the .Rdata files within the package
-data_dir <- system.file("data", package = "BalanceMate")
+# Locate the directory containing the .RData files within the package
+data_dir <- system.file("extdata", package = "BalanceMate")
 
 # Create a temporary directory to store the .txt files
-temp_data_dir <- file.path(tempdir(), "data")
+temp_data_dir <- file.path(tempdir(), "extdata")
 dir.create(temp_data_dir, showWarnings = FALSE)
 
 # Process each file: load, optionally add a blank row, and write to .txt
 invisible(lapply(files, function(f) {
-  # Load the .Rdata file from the package's extdata directory
-  load(file.path(data_dir, paste0(f, ".Rdata")))
+  # Load the .RData file from the package's extdata directory
+  load(file.path(data_dir, paste0(f, ".RData")))
 
   data <- get(f)
   # Write the data to a .txt file in the temporary directory

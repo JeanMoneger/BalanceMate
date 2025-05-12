@@ -110,14 +110,14 @@ ___
 
 Based on the literature and the popularity of this specific filter (see Monéger et al., 2024 [preprint]), you want to use a **2nd order Butterworth filter** with a **cut-off frequency of 5Hz.**
 
-*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+*Note: the files are stored as RData to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert RData to text files before running the examples*
 
 ```{r}
 # 1. Locate the installed extdata/ folder (contains only .RData now)
 path_extdata <- system.file("extdata", package = "BalanceMate")
 
 # 2. Find all .RData (case‐insensitive)
-rdata_files <- list.files(
+RData_files <- list.files(
   path_extdata,
   pattern    = "\\.[Rr][Dd]ata$",
   full.names = TRUE
@@ -125,7 +125,7 @@ rdata_files <- list.files(
 
 # 3. Convert each .RData to a .txt in a temp directory
 tmpdir <- tempdir()
-for (f in rdata_files) {
+for (f in RData_files) {
   load(f)  # e.g. loads object “Postural_DataA” into your session
   nm <- tools::file_path_sans_ext(basename(f))
   write.table(
@@ -159,7 +159,7 @@ filtered_data <- Butterworth_it(
 
 The resulting data file contains now one column with the raw untransformed signal and one column with the filtered signal.
 
-We can now compare the original signal to the filtered signal to assess whether the filter did not result in some weird signal. Because we have a lot of data, I only illustrate here what happened in a specific sample of measures in one participant (I however do recommend that users try multiple samples including the beginning and the end of specific trial; see for instance: https://stackoverflow.com/questions/67847747/butterworth-filter-results-in-extreme-outliers-at-start-of-the-signal).
+We can now compare the original signal to the filtered signal to assess whether the filter did not result in some weird signal. Because we have a lot of data, I only illustrate here what happened in a specific sample of measures in one participant (I however do recommend that users try multiple samples including the beginning and the end of specific trial).
 
 
 ```{r, fig.show='hold'}

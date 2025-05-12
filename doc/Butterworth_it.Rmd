@@ -110,24 +110,24 @@ ___
 
 Based on the literature and the popularity of this specific filter (see Monéger et al., 2024 [preprint]), you want to use a **2nd order Butterworth filter** with a **cut-off frequency of 5Hz.**
 
-*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+*Note: the files are stored as RData to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert RData to text files before running the examples*
 
 ```{r}
 #Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
 
-# If required: convert Rdata to txt files:
+# If required: convert RData to txt files:
 files <- list(
-    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
-    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
-    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
-    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
-    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
-    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.RData",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.RData",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.RData",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.RData",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.RData",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.RData"
 )
 
 # Loop through each file, add a blank row with spaces, and save as .txt
 for (name in names(files)) {
-    # Load the .Rdata file
+    # Load the .RData file
     load(files[[name]])
     
     # Dynamically get the object loaded (assuming it's named the same as the file)
@@ -156,7 +156,7 @@ filtered_data <- Butterworth_it(
 
 The resulting data file contains now one column with the raw untransformed signal and one column with the filtered signal.
 
-We can now compare the original signal to the filtered signal to assess whether the filter did not result in some weird signal. Because we have a lot of data, I only illustrate here what happened in a specific sample of measures in one participant (I however do recommend that users try multiple samples including the beginning and the end of specific trial; see for instance: https://stackoverflow.com/questions/67847747/butterworth-filter-results-in-extreme-outliers-at-start-of-the-signal).
+We can now compare the original signal to the filtered signal to assess whether the filter did not result in some weird signal. Because we have a lot of data, I only illustrate here what happened in a specific sample of measures in one participant (I however do recommend that users try multiple samples including the beginning and the end of specific trial).
 
 
 ```{r, fig.show='hold'}

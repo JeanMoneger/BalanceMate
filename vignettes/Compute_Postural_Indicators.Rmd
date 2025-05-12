@@ -67,14 +67,14 @@ You have a data set (N = 6) where participants viewed pictures for 100 seconds. 
 
 Each session included 20s of neutral picture viewing, then 8 trials including 2s fixation crosses, and 8seconds critical picture viewing. Using the `Time_StampeR` function from `BalanceMate`, you can then extract only the relevant data points of your critical trials (using `subset`).
 
-*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+*Note: the files are stored as RData to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert RData to text files before running the examples*
 
 ```{r}
 # 1. Locate the installed extdata/ folder (contains only .RData now)
 path_extdata <- system.file("extdata", package = "BalanceMate")
 
 # 2. Find all .RData (case‐insensitive)
-rdata_files <- list.files(
+RData_files <- list.files(
   path_extdata,
   pattern    = "\\.[Rr][Dd]ata$",
   full.names = TRUE
@@ -82,7 +82,7 @@ rdata_files <- list.files(
 
 # 3. Convert each .RData to a .txt in a temp directory
 tmpdir <- tempdir()
-for (f in rdata_files) {
+for (f in RData_files) {
   load(f)  # e.g. loads object “Postural_DataA” into your session
   nm <- tools::file_path_sans_ext(basename(f))
   write.table(
@@ -168,10 +168,13 @@ head(CompleteData)
 
 ### Further readings
 
-Lelard, T., Stins, J., & Mouras, H. (2019). Postural responses to emotional visual stimuli. Neurophysiologie clinique = Clinical neurophysiology, 49(2), 109–114. https://doi.org/10.1016/j.neucli.2019.01.005
+- Lelard, T., Stins, J., & Mouras, H. (2019). Postural responses to emotional visual stimuli. *Neurophysiologie clinique = Clinical neurophysiology, 49*(2), 109–114.  
+  https://doi.org/10.1016/j.neucli.2019.01.005
 
-Monéger, J., Chaby, L., Besche-Richard, C., & Vergilino-Perez, D. (online preprint, September 2024). The Effects of Exposure to Pleasant/Unpleasant stimuli on Body Posture: a Systematic Review and Meta-Analysis. Authorea. https://doi.org/10.22541/au.172724765.51726753/v1 (retrieved from https://www.authorea.com/users/835564/articles/1227818-the-effects-of-exposure-to-pleasant-unpleasant-stimuli-on-body-posture-a-systematic-review-and-meta-analysis)
-
+- Monéger, J., Chaby, L., Besche-Richard, C., & Vergilino-Perez, D. (online preprint, September 2024).  
+  The Effects of Exposure to Pleasant/Unpleasant Stimuli on Body Posture: A Systematic Review and Meta-Analysis. *Authorea Preprints*.  
+  https://doi.org/10.22541/au.172724765.51726753/v1
+  
 Guide book on [Processing postural data using BalanceMate](https://jeanmoneger.com/book/processing)
 
 

@@ -16,10 +16,10 @@ library(ggplot2)
 # }
 
 
-outcome_df<-structure(list(Outcome = structure(1:8, levels = c("Amplitude COP", 
-"Area Body Sw", "COP Y", "ErrorCoP", "MeanSpeed", "Other", "SD COP", 
-"Sway Path Length"), class = "factor"), Frequency = c(1L, 3L, 
-20L, 1L, 1L, 1L, 10L, 7L)), class = "data.frame", row.names = c(NA, 
+outcome_df<-structure(list(Outcome = structure(1:8, levels = c("Amplitude COP",
+"Area Body Sw", "COP Y", "ErrorCoP", "MeanSpeed", "Other", "SD COP",
+"Sway Path Length"), class = "factor"), Frequency = c(1L, 3L,
+20L, 1L, 1L, 1L, 10L, 7L)), class = "data.frame", row.names = c(NA,
 -8L))
 
 ggplot2::ggplot(outcome_df, aes(x = Outcome, y = Frequency, fill = Outcome)) +
@@ -44,71 +44,71 @@ ggplot2::ggplot(outcome_df, aes(x = Outcome, y = Frequency, fill = Outcome)) +
 # Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
 
 
-# If required: convert Rdata to text files.
+# If required: convert RData to text files.
 
 files <- list(
-    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
-    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
-    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
-    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
-    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
-    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.RData",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.RData",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.RData",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.RData",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.RData",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.RData"
 )
 
 # Loop through each file, add a blank row with spaces, and save as .txt
 for (name in names(files)) {
-    # Load the .Rdata file
+    # Load the .RData file
     load(files[[name]])
-    
+
     # Dynamically get the object loaded (assuming it's named the same as the file)
     data <- get(name)
-    
+
     # Add a "blank" row (spaces for all cells) at the top
     #blank_row <- rep(" ", 6)  # Create a row of spaces with the same number of columns
     #data <- rbind(blank_row, data)
-    
+
     # Write to a .txt file with the same name
     write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
 }
 
 Data<-Merge_PosData(".", SampleRate = 100, SessionDuration = 100)
 
-# Identify the time cuts in your protocol: 
-cuts<-c(20, 
-                     22, 
-                     30, 
-                     32, 
-                     40, 
-                     42, 
-                     50, 
-                     52, 
-                     60, 
-                     62, 
-                     70, 
-                     72, 
-                     80, 
+# Identify the time cuts in your protocol:
+cuts<-c(20,
+                     22,
+                     30,
+                     32,
+                     40,
+                     42,
+                     50,
+                     52,
+                     60,
+                     62,
+                     70,
+                     72,
+                     80,
                      82,
-                     90, 
+                     90,
                      92)
 
 # Label the periods:
-Label = c("Training", 
-          "Fix", 
-          "Trial_1", 
-          "Fix", 
-          "Trial_2", 
-          "Fix", 
+Label = c("Training",
+          "Fix",
+          "Trial_1",
+          "Fix",
+          "Trial_2",
+          "Fix",
           "Trial_3",
-          "Fix", 
-          "Trial_4", 
-          "Fix", 
-          "Trial_5", 
-          "Fix", 
-          "Trial_6", 
-          "Fix", 
-          "Trial_7", 
-          "Fix", 
-          "Trial_8") 
+          "Fix",
+          "Trial_4",
+          "Fix",
+          "Trial_5",
+          "Fix",
+          "Trial_6",
+          "Fix",
+          "Trial_7",
+          "Fix",
+          "Trial_8")
 
 
 Annotated_Data <- Time_StampeR(df = Data, id_col = "file_name", sample_rate = 100, protocol_duration = 100, cuts = cuts, period_names = Label)

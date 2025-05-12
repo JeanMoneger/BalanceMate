@@ -33,26 +33,26 @@ The mean CoP-X and Mean CoP-Y at a pre-specified time bin level (or at a partici
 
 You collected the data of 6 participants who viewed passively pictures for 100 seconds with a sample rate if 100Hz. You are interested in the mean CoP-Y and CoP-X displacements during the first half of the session (pleasant pictures) and the last half of the sessions (unpleasant pictures).
 
-*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+*Note: the files are stored as RData to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert RData to text files before running the examples*
 
 ```{r}
 #path_to_data <- system.file("extdata", package = "BalanceMate")
 #Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 
-# If required: convert Rdata to text files.
+# If required: convert RData to text files.
 
 files <- list(
-    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
-    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
-    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
-    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
-    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
-    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.RData",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.RData",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.RData",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.RData",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.RData",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.RData"
 )
 
 # Loop through each file, add a blank row with spaces, and save as .txt
 for (name in names(files)) {
-    # Load the .Rdata file
+    # Load the .RData file
     load(files[[name]])
     
     # Dynamically get the object loaded (assuming it's named the same as the file)

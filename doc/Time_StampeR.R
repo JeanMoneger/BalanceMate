@@ -24,35 +24,35 @@ library(ggplot2)
 # }
 # Define the data
 time_periods <- data.frame(
-  Periods = c("Training (20s)", 
-              "Fixation Cross (5s)", 
-              "Unpleasant trial (15s)", 
-              "Fixation Cross (5s)", 
-              "Pleasant trial (15s)", 
-              "Fixation Cross (5s)", 
-              "Unpleasant trial (15s)", 
-              "Fixation Cross (5s)", 
-              "Pleasant trial (15s)"), 
+  Periods = c("Training (20s)",
+              "Fixation Cross (5s)",
+              "Unpleasant trial (15s)",
+              "Fixation Cross (5s)",
+              "Pleasant trial (15s)",
+              "Fixation Cross (5s)",
+              "Unpleasant trial (15s)",
+              "Fixation Cross (5s)",
+              "Pleasant trial (15s)"),
   Label = c("Training", "Fix", "Unpl_Trial", "Fix", "Pleas_Trial", "Fix", "Unpl_Trial",
             "Fix", "Pleas_Trial"),
-  `End Time (s)` = c(20, 
-                     25, 
-                     40, 
-                     45, 
-                     60, 
-                     65, 
-                     80, 
-                     85, 
+  `End Time (s)` = c(20,
+                     25,
+                     40,
+                     45,
+                     60,
+                     65,
+                     80,
+                     85,
                      100)
 )
 
 # Create a neat HTML table
 kableExtra::kable(time_periods, format = "html", col.names = c("Periods of interest", "Label", "End Time (s)"), table.attr = "style='width:50%;'") %>%
   kable_styling(
-    full_width = FALSE, 
+    full_width = FALSE,
     bootstrap_options = c("striped", "hover", "condensed", "responsive"),
     position = "center"
-  ) 
+  )
 
 
 ## -----------------------------------------------------------------------------
@@ -60,25 +60,25 @@ kableExtra::kable(time_periods, format = "html", col.names = c("Periods of inter
 #Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
 
 
-# If required: convert Rdata to text files.
+# If required: convert RData to text files.
 setwd("/Users/sylviemoneger/Desktop/BalanceMate/data")
 files <- list(
-    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
-    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
-    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
-    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
-    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
-    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.RData",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.RData",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.RData",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.RData",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.RData",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.RData"
 )
 
 # Loop through each file, add a blank row with spaces, and save as .txt
 for (name in names(files)) {
-    # Load the .Rdata file
+    # Load the .RData file
     load(files[[name]])
-    
+
     # Dynamically get the object loaded (assuming it's named the same as the file)
     data <- get(name)
-    
+
     # Write to a .txt file with the same name
     write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
 }
@@ -86,25 +86,25 @@ for (name in names(files)) {
 path_to_data <- system.file("data", package = "BalanceMate")
 
 
-# Identify the time cuts in your protocol: 
-cuts<-c(20, 
-        25, 
-        40, 
-        45, 
-        60, 
-        65, 
-        80, 
+# Identify the time cuts in your protocol:
+cuts<-c(20,
+        25,
+        40,
+        45,
+        60,
+        65,
+        80,
         85)
 
 # Label the periods:
-Labels = c("Training", 
-              "Fix", 
-              "Unpleasant_t", 
-              "Fix", 
-              "Pleasant_t", 
-              "Fix", 
-              "Unpleasant_t", 
-              "Fix", 
+Labels = c("Training",
+              "Fix",
+              "Unpleasant_t",
+              "Fix",
+              "Pleasant_t",
+              "Fix",
+              "Unpleasant_t",
+              "Fix",
               "Pleasant_t")
 
 Annotated_Data <- Time_StampeR(df = Data, id_col = "file_name", sample_rate = 100, protocol_duration = 100, cuts = cuts, period_names = Labels)

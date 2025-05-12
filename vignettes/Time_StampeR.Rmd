@@ -90,14 +90,14 @@ Identified cuts are thus occuring a time 20, t = 25, t = 40, t = 45, t = 60, t =
 
 We now have to use the `Time_stampeR` functions indicating where cuts should happen and how periods of interest should be labelled:
 
-*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+*Note: the files are stored as RData to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert RData to text files before running the examples*
 
 ```{r}
 # 1. Locate the installed extdata/ folder (contains only .RData now)
 path_extdata <- system.file("extdata", package = "BalanceMate")
 
 # 2. Find all .RData (case‐insensitive)
-rdata_files <- list.files(
+RData_files <- list.files(
   path_extdata,
   pattern    = "\\.[Rr][Dd]ata$",
   full.names = TRUE
@@ -105,7 +105,7 @@ rdata_files <- list.files(
 
 # 3. Convert each .RData to a .txt in a temp directory
 tmpdir <- tempdir()
-for (f in rdata_files) {
+for (f in RData_files) {
   load(f)  # e.g. loads object “Postural_DataA” into your session
   nm <- tools::file_path_sans_ext(basename(f))
   write.table(

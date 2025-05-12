@@ -29,14 +29,14 @@ Whereas the former family is useful for researchers interested in motivation (ap
 
 95% confidence ellipse area are popular indicators of the variability of CoP displacements. A 95% confidence ellipse area will quantify the area (in cm^2) of an ellipse that contains 95% of the data points (see figure below).
 
-*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+*Note: the files are stored as RData to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert RData to text files before running the examples*
 
 ```{r}
 # 1. Locate the installed extdata/ folder (contains only .RData now)
 path_extdata <- system.file("extdata", package = "BalanceMate")
 
 # 2. Find all .RData (case‐insensitive)
-rdata_files <- list.files(
+RData_files <- list.files(
   path_extdata,
   pattern    = "\\.[Rr][Dd]ata$",
   full.names = TRUE
@@ -44,7 +44,7 @@ rdata_files <- list.files(
 
 # 3. Convert each .RData to a .txt in a temp directory
 tmpdir <- tempdir()
-for (f in rdata_files) {
+for (f in RData_files) {
   load(f)  # e.g. loads object “Postural_DataA” into your session
   nm <- tools::file_path_sans_ext(basename(f))
   write.table(
@@ -88,7 +88,7 @@ You collected 6 participants viewing passively some pictures for 100s.
 
 ```{r}
 
-rdata_files <- list.files(
+RData_files <- list.files(
   path_extdata,
   pattern    = "\\.[Rr][Dd]ata$",
   full.names = TRUE
@@ -96,7 +96,7 @@ rdata_files <- list.files(
 
 # 3. Convert each .RData to a .txt in a temp directory
 tmpdir <- tempdir()
-for (f in rdata_files) {
+for (f in RData_files) {
   load(f)  # e.g. loads object “Postural_DataA” into your session
   nm <- tools::file_path_sans_ext(basename(f))
   write.table(
@@ -191,7 +191,7 @@ SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postur
 
 ## Further readings
 
-Quijoux, F., Nicolaï, A., Chairi, I., Bargiotas, I., Ricard, D., Yelnik, A., Oudre, L., Bertin-Hugault, F., Vidal, P. P., Vayatis, N., Buffat, S., & Audiffren, J. (2021). A review of center of pressure (COP) variables to quantify standing balance in elderly people: Algorithms and open-access code. *Physiological reports, 9*(22), e15067. https://doi.org/10.14814/phy2.15067 
+Quijoux, F., Nicolaï, A., Chairi, I., Bargiotas, I., Ricard, D., Yelnik, A., Oudre, L., Bertin-Hugault, F., Vidal, P. P., Vayatis, N., Buffat, S., & Audiffren, J. (2021). A review of center of pressure (COP) variables to quantify standing balance in elderly people: Algorithms and open-access code. *Physiological reports, 9*(22), e15067. doi: 10.14814/phy2.15067 
 
 
 Monéger, J., Chaby, L., Besche-Richard, C., & Vergilino-Perez, D. (submitted in Emotion). Should I Stay or Should I go: An Exploration of Spontaneous Postural Behaviours Following Threatening Emotion Perception.
