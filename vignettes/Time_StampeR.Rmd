@@ -93,35 +93,38 @@ We now have to use the `Time_stampeR` functions indicating where cuts should hap
 *Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
 
 ```{r}
-#path_to_data <- system.file("extdata", package = "BalanceMate")
-#Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+# 1. Locate the installed extdata/ folder (contains only .RData now)
+path_extdata <- system.file("extdata", package = "BalanceMate")
 
-
-# If required: convert Rdata to text files.
-setwd("/Users/sylviemoneger/Desktop/BalanceMate/data")
-files <- list(
-    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
-    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
-    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
-    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
-    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
-    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+# 2. Find all .RData (case‐insensitive)
+rdata_files <- list.files(
+  path_extdata,
+  pattern    = "\\.[Rr][Dd]ata$",
+  full.names = TRUE
 )
 
-# Loop through each file, add a blank row with spaces, and save as .txt
-for (name in names(files)) {
-    # Load the .Rdata file
-    load(files[[name]])
-    
-    # Dynamically get the object loaded (assuming it's named the same as the file)
-    data <- get(name)
-    
-    # Write to a .txt file with the same name
-    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+# 3. Convert each .RData to a .txt in a temp directory
+tmpdir <- tempdir()
+for (f in rdata_files) {
+  load(f)  # e.g. loads object “Postural_DataA” into your session
+  nm <- tools::file_path_sans_ext(basename(f))
+  write.table(
+    get(nm),
+    file      = file.path(tmpdir, paste0(nm, ".txt")),
+    sep       = ",",
+    row.names = FALSE,
+    col.names = FALSE,
+    quote     = FALSE
+  )
 }
 
-path_to_data <- system.file("data", package = "BalanceMate")
 
+# 4. Merge from the tempdir
+Data <- Merge_PosData(
+  directory_path = tmpdir,              
+  SampleRate     = 100,
+  SessionDuration= 100
+)
 
 # Identify the time cuts in your protocol: 
 cuts<-c(20, 
@@ -166,14 +169,3 @@ tail(Crit_Data)
 
 See the [Managing Section of the BalanceMate Guide book](https://jeanmoneger.com/book/managing-1) 
 
-
-```{r, include = FALSE}
-dir<-getwd()
-unlink(paste0(dir,"/Postural_DataA.txt"))
-unlink(paste0(dir,"/Postural_DataB.txt"))
-unlink(paste0(dir,"/Postural_DataC.txt"))
-unlink(paste0(dir,"/Postural_DataD.txt"))
-unlink(paste0(dir,"/Postural_DataE.txt"))
-unlink(paste0(dir,"/Postural_DataF.txt"))
-
-```

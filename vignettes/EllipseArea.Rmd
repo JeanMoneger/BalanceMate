@@ -32,40 +32,45 @@ Whereas the former family is useful for researchers interested in motivation (ap
 *Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
 
 ```{r}
-#path_to_data <- system.file("extdata", package = "BalanceMate")
-#' # Input correct arguments: here, the protocol is 100seconds long, the sample rate is 100Hz
-#Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+# 1. Locate the installed extdata/ folder (contains only .RData now)
+path_extdata <- system.file("extdata", package = "BalanceMate")
 
-# If required: convert Rdata to text files.
-
-files <- list(
-    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
-    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
-    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
-    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
-    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
-    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+# 2. Find all .RData (case‐insensitive)
+rdata_files <- list.files(
+  path_extdata,
+  pattern    = "\\.[Rr][Dd]ata$",
+  full.names = TRUE
 )
 
-# Loop through each file, add a blank row with spaces, and save as .txt
-for (name in names(files)) {
-    # Load the .Rdata file
-    load(files[[name]])
-    
-    # Dynamically get the object loaded (assuming it's named the same as the file)
-    data <- get(name)
-    
-    # Write to a .txt file with the same name
-    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+# 3. Convert each .RData to a .txt in a temp directory
+tmpdir <- tempdir()
+for (f in rdata_files) {
+  load(f)  # e.g. loads object “Postural_DataA” into your session
+  nm <- tools::file_path_sans_ext(basename(f))
+  write.table(
+    get(nm),
+    file      = file.path(tmpdir, paste0(nm, ".txt")),
+    sep       = ",",
+    row.names = FALSE,
+    col.names = FALSE,
+    quote     = FALSE
+  )
 }
 
-Data<-Merge_PosData(".", SampleRate = 100, SessionDuration = 100)
 
+# 4. Merge from the tempdir
+Data <- Merge_PosData(
+  directory_path = tmpdir,              
+  SampleRate     = 100,
+  SessionDuration= 100
+)
 
 
 SpaghettEllipse(Data, participant_id_col = "file_name", participant_id = "Postural_DataA.txt")
 
 ```
+
+
 
 
 Details of computation of this indicators can be found in Quijoux et al. (2021).
@@ -82,32 +87,35 @@ Details of computation of this indicators can be found in Quijoux et al. (2021).
 You collected 6 participants viewing passively some pictures for 100s.
 
 ```{r}
-#Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
 
-files <- list(
-    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
-    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
-    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
-    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
-    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
-    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+rdata_files <- list.files(
+  path_extdata,
+  pattern    = "\\.[Rr][Dd]ata$",
+  full.names = TRUE
 )
 
-# Loop through each file, add a blank row with spaces, and save as .txt
-for (name in names(files)) {
-    # Load the .Rdata file
-    load(files[[name]])
-    
-    # Dynamically get the object loaded (assuming it's named the same as the file)
-    data <- get(name)
-    
-    # Write to a .txt file with the same name
-    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+# 3. Convert each .RData to a .txt in a temp directory
+tmpdir <- tempdir()
+for (f in rdata_files) {
+  load(f)  # e.g. loads object “Postural_DataA” into your session
+  nm <- tools::file_path_sans_ext(basename(f))
+  write.table(
+    get(nm),
+    file      = file.path(tmpdir, paste0(nm, ".txt")),
+    sep       = ",",
+    row.names = FALSE,
+    col.names = FALSE,
+    quote     = FALSE
+  )
 }
 
-Data<-Merge_PosData(".", SampleRate = 100, SessionDuration = 100)
 
-
+# 5. Merge from the tempdir
+Data <- Merge_PosData(
+  tmpdir,              # first, unnamed argument is the folder of .txt files
+  SampleRate     = 100,
+  SessionDuration= 100
+)
 
 ```
 
@@ -189,15 +197,4 @@ Quijoux, F., Nicolaï, A., Chairi, I., Bargiotas, I., Ricard, D., Yelnik, A., Ou
 Monéger, J., Chaby, L., Besche-Richard, C., & Vergilino-Perez, D. (submitted in Emotion). Should I Stay or Should I go: An Exploration of Spontaneous Postural Behaviours Following Threatening Emotion Perception.
 
 See also the [Processing chapter of the BalanceMate guide book](https://jeanmoneger.com/book/processing)
-
-```{r, include = FALSE}
-dir<-getwd()
-unlink(paste0(dir,"/Postural_DataA.txt"))
-unlink(paste0(dir,"/Postural_DataB.txt"))
-unlink(paste0(dir,"/Postural_DataC.txt"))
-unlink(paste0(dir,"/Postural_DataD.txt"))
-unlink(paste0(dir,"/Postural_DataE.txt"))
-unlink(paste0(dir,"/Postural_DataF.txt"))
-
-```
 

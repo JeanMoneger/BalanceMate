@@ -45,7 +45,7 @@ temp_data_dir <- file.path(tempdir(), "data")
 dir.create(temp_data_dir, showWarnings = FALSE)
 
 # Process each file: load, optionally add a blank row, and write to .txt
-lapply(files, function(f) {
+invisible(lapply(files, function(f) {
   # Load the .Rdata file from the package's extdata directory
   load(file.path(data_dir, paste0(f, ".Rdata")))
 
@@ -53,7 +53,7 @@ lapply(files, function(f) {
   # Write the data to a .txt file in the temporary directory
   write.table(data, file = file.path(temp_data_dir, paste0(f, ".txt")), sep = ",",
   row.names = FALSE, col.names = FALSE, quote = FALSE)
-})
+}))
 
 Data <- Merge_PosData(temp_data_dir, SampleRate = 100, SessionDuration = 100)
 
