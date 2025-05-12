@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Synthetise your data into time-bins</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Synthetise your data into time-bins</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(BalanceMate)</span></code></pre></div>
+<p>Epoch_SliceR.R</p>
+<div id="description" class="section level2">
+<h2>Description</h2>
+<p>The <code>Epoch_SliceR</code> command allows the user to compute
+average scores at a specified time-bin level. Note that users familiar
+with the <code>tidyverse</code> could once again do this data-wrangling
+by exploiting this powerful package. Nevertheless, we assume that some
+researchers might not be familiar with the pipe operators and specific
+grammar of the <code>tidyverse.</code> Our package hence wants to
+deliver a toolbox entailing the data-wrangling involved in postural
+studies.</p>
+<p>To use the <code>Epoch_SliceR</code>, you will need to determine the
+columns of your data you would like to synthetise, the sample rate in
+your protocol, and the time bin you want to define as your analysis
+unit.</p>
+</div>
+<div id="example-usage" class="section level2">
+<h2>Example Usage</h2>
+<p>In a study with 6 participants, where you measured body sway for 100
+seconds with a sample rate of 100Hz, you would like to synthetise the
+output in more comprehensible time bins of 1s.</p>
+<p><em>Note: the files are stored as Rdata to reduce the size of the
+package – however the command only accepts txt files, hence it is
+required to first convert Rdata to text files before running the
+examples</em></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co">#path_to_data &lt;- system.file(&quot;extdata&quot;, package = &quot;BalanceMate&quot;)</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#Data &lt;- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># If required: convert Rdata to text files.</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>    <span class="st">&quot;Postural_DataA&quot;</span> <span class="ot">=</span> <span class="st">&quot;~/Desktop/BalanceMate/data/Postural_DataA.Rdata&quot;</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>    <span class="st">&quot;Postural_DataB&quot;</span> <span class="ot">=</span> <span class="st">&quot;~/Desktop/BalanceMate/data/Postural_DataB.Rdata&quot;</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>    <span class="st">&quot;Postural_DataC&quot;</span> <span class="ot">=</span> <span class="st">&quot;~/Desktop/BalanceMate/data/Postural_DataC.Rdata&quot;</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>    <span class="st">&quot;Postural_DataD&quot;</span> <span class="ot">=</span> <span class="st">&quot;~/Desktop/BalanceMate/data/Postural_DataD.Rdata&quot;</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>    <span class="st">&quot;Postural_DataE&quot;</span> <span class="ot">=</span> <span class="st">&quot;~/Desktop/BalanceMate/data/Postural_DataE.Rdata&quot;</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>    <span class="st">&quot;Postural_DataF&quot;</span> <span class="ot">=</span> <span class="st">&quot;~/Desktop/BalanceMate/data/Postural_DataF.Rdata&quot;</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>)</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co"># Loop through each file, add a blank row with spaces, and save as .txt</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="cf">for</span> (name <span class="cf">in</span> <span class="fu">names</span>(files)) {</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>    <span class="co"># Load the .Rdata file</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>    <span class="fu">load</span>(files[[name]])</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>    </span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>    <span class="co"># Dynamically get the object loaded (assuming it&#39;s named the same as the file)</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>    data <span class="ot">&lt;-</span> <span class="fu">get</span>(name)</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>    </span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>    <span class="co"># Write to a .txt file with the same name</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>    <span class="fu">write.table</span>(data, <span class="at">file =</span> <span class="fu">paste0</span>(name, <span class="st">&quot;.txt&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>}</span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>Data<span class="ot">&lt;-</span><span class="fu">Merge_PosData</span>(<span class="st">&quot;.&quot;</span>, <span class="at">SampleRate =</span> <span class="dv">100</span>, <span class="at">SessionDuration =</span> <span class="dv">100</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="fu">Epoch_SliceR</span>(<span class="at">df =</span> Data,</span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a>      <span class="at">ID =</span> <span class="st">&quot;file_name&quot;</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>      <span class="at">columns_to_synthesize =</span> <span class="fu">c</span>(<span class="st">&quot;CoP_X&quot;</span>, <span class="st">&quot;CoP_Y&quot;</span>),</span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>      <span class="at">epoch_length =</span> <span class="dv">1</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>      <span class="at">sample_rate=</span><span class="dv">100</span>,</span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>      <span class="at">session_duration =</span> <span class="dv">100</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,] <span class="co"># Only display the first 20 rows of the resulting data set</span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt;    Epoch                 ID Mean_CoP_X    SD_CoP_X Mean_CoP_Y   SD_CoP_Y</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; 1      1 Postural_DataA.txt -0.7024449 0.173867501  0.8916070 0.25642546</span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt; 2      2 Postural_DataA.txt -0.5186725 0.066740330  0.7656363 0.18324255</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt; 3      3 Postural_DataA.txt -0.6890181 0.069267113  2.1369338 0.60962621</span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt; 4      4 Postural_DataA.txt -0.4029652 0.044833013  1.9005180 0.26259576</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; 5      5 Postural_DataA.txt -0.7052528 0.131792523  1.0709691 0.44279270</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt; 6      6 Postural_DataA.txt -0.4380722 0.087657215  0.2547817 0.14961517</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt; 7      7 Postural_DataA.txt -0.4284532 0.142947394  0.7953204 0.34109958</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt; 8      8 Postural_DataA.txt -0.7830691 0.065092438  0.4041888 0.12512986</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt; 9      9 Postural_DataA.txt -1.2552830 0.190937625  0.4158023 0.34997661</span></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co">#&gt; 10    10 Postural_DataA.txt -2.2659777 0.962217816 -1.9179301 0.97684572</span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co">#&gt; 11    11 Postural_DataA.txt -3.3595698 0.618323570 -3.4022902 0.35478534</span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#&gt; 12    12 Postural_DataA.txt -2.3880310 0.051739285 -2.4947254 0.20979112</span></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co">#&gt; 13    13 Postural_DataA.txt -1.9896505 0.228912759 -2.2508496 0.27940784</span></span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co">#&gt; 14    14 Postural_DataA.txt -2.1915058 0.060090049 -2.9024906 0.13201667</span></span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co">#&gt; 15    15 Postural_DataA.txt -2.3655609 0.073103102 -3.1118372 0.17515217</span></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a><span class="co">#&gt; 16    16 Postural_DataA.txt -1.9394468 0.130573375 -2.7493037 0.09299264</span></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co">#&gt; 17    17 Postural_DataA.txt -2.0392773 0.091248074 -2.7487253 0.22085367</span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a><span class="co">#&gt; 18    18 Postural_DataA.txt -1.9782206 0.048485111 -1.7467458 0.23003184</span></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a><span class="co">#&gt; 19    19 Postural_DataA.txt -1.9057557 0.008561508 -1.7430775 0.21909308</span></span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="co">#&gt; 20    20 Postural_DataA.txt -1.8889550 0.031675276 -2.0004698 0.12099222</span></span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a><span class="co">#&gt;          Fx       Fy       Fz        Mx       My       Mz  Time</span></span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a><span class="co">#&gt; 1   7.24049  7.22547 790.0556   5.47499  7.68121 -0.16553  0.01</span></span>
+<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="co">#&gt; 2   8.17798  7.49855 787.0564   9.07368  3.72468 -0.33309  1.01</span></span>
+<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a><span class="co">#&gt; 3   7.64578  3.32801 788.1440   7.30857  5.00166 -0.07153  2.01</span></span>
+<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a><span class="co">#&gt; 4   7.36464  7.58037 788.3662  18.64679  4.16675 -0.09964  3.01</span></span>
+<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a><span class="co">#&gt; 5   7.07065  4.53257 791.9065  11.74987  3.10929 -0.46487  4.01</span></span>
+<span id="cb2-63"><a href="#cb2-63" tabindex="-1"></a><span class="co">#&gt; 6   7.16560  2.58599 795.2873   1.46415  4.99527 -0.05933  5.01</span></span>
+<span id="cb2-64"><a href="#cb2-64" tabindex="-1"></a><span class="co">#&gt; 7   8.18843  6.03179 791.7661   2.90070  2.05729  0.03357  6.01</span></span>
+<span id="cb2-65"><a href="#cb2-65" tabindex="-1"></a><span class="co">#&gt; 8   7.48626  6.19599 790.5765   6.59688  5.33052  0.17790  7.01</span></span>
+<span id="cb2-66"><a href="#cb2-66" tabindex="-1"></a><span class="co">#&gt; 9   9.09846  6.48043 791.8034   4.10223  6.55580 -0.65067  8.01</span></span>
+<span id="cb2-67"><a href="#cb2-67" tabindex="-1"></a><span class="co">#&gt; 10  9.77147  6.15390 787.0906  -4.26372 10.20867 -0.20830  9.01</span></span>
+<span id="cb2-68"><a href="#cb2-68" tabindex="-1"></a><span class="co">#&gt; 11  3.29982 -1.47769 790.3542 -29.32771 32.18591 -0.04585 10.01</span></span>
+<span id="cb2-69"><a href="#cb2-69" tabindex="-1"></a><span class="co">#&gt; 12 10.08275  5.03516 784.4031 -19.52301 18.93200  0.49706 11.01</span></span>
+<span id="cb2-70"><a href="#cb2-70" tabindex="-1"></a><span class="co">#&gt; 13  8.28538  4.79361 787.7741 -17.88359 18.31476  0.10103 12.01</span></span>
+<span id="cb2-71"><a href="#cb2-71" tabindex="-1"></a><span class="co">#&gt; 14  8.07756  4.57128 790.2765 -21.33327 16.38724  0.57736 13.01</span></span>
+<span id="cb2-72"><a href="#cb2-72" tabindex="-1"></a><span class="co">#&gt; 15  7.12581  3.01768 790.4504 -25.97112 18.74557  0.35034 14.01</span></span>
+<span id="cb2-73"><a href="#cb2-73" tabindex="-1"></a><span class="co">#&gt; 16  7.64705  4.30164 788.7791 -23.15770 17.72657  0.26202 15.01</span></span>
+<span id="cb2-74"><a href="#cb2-74" tabindex="-1"></a><span class="co">#&gt; 17  9.45856  4.03266 786.7954 -22.23448 13.84823  0.31733 16.01</span></span>
+<span id="cb2-75"><a href="#cb2-75" tabindex="-1"></a><span class="co">#&gt; 18  8.87557  3.56415 788.6654 -18.38271 15.36093  0.22083 17.01</span></span>
+<span id="cb2-76"><a href="#cb2-76" tabindex="-1"></a><span class="co">#&gt; 19  7.96229  5.68097 788.8219 -12.11690 15.06458  0.09314 18.01</span></span>
+<span id="cb2-77"><a href="#cb2-77" tabindex="-1"></a><span class="co">#&gt; 20  8.68985  2.87464 787.6806 -17.27262 15.02250  0.28614 19.01</span></span></code></pre></div>
+<p>Epoch_SliceR.R</p>
+<p>Note that this approach is not particularly recommended, unless you
+are working with extremely large data sets. In all other cases, you
+might want to keep your raw complete data sets and further compute
+postural indicators using time bins arguments (i.e., epoch
+specification).</p>
+</div>
+<div id="further-reading" class="section level2">
+<h2>Further reading</h2>
+<p>See the <a href="https://jeanmoneger.com/book/managing-1">Managing
+section of the BalanceMate guide book</a></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

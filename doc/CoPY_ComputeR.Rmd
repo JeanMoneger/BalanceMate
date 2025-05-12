@@ -1,0 +1,87 @@
+---
+title: "Compute CoP-Y"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{CoPY_ComputeR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BalanceMate)
+```
+
+## Description
+
+The most basic indicator of body displacements is the center of pressure. It corresponds to the point on a surface where the total pressure of a person's body weight is applied. As such, it reflects the body's balance and stability during standing or movement.
+
+Center of pressure can be computed on two axes: 
+
+- Antero-posterior axis, a.k.a., CoP-Y
+- Medio-lateral axis, a.k.a., CoP-X.
+
+Quite counterintuitively, the CoP-Y is computed from the moments on the X-axis, and the CoP-X is computed from the moments on the Y-axis. You should imagine Moments on the X-axis as the rotation of a bar orientated following the X axis. Rotations of this bar, as you can imagine, will thus indicate leaning forward vs. backward.
+
+Similarly, Moments on the Y-axis are rotations following the antero-posterior axis, thus indicating leaning on the right or the left. By convention, we reverse this rotation in the computation of CoP-X (i.e., we use -My, and not My). This result in a movement toward the right being a negative CoP and movement toward the left being a positive CoP. In simpler terms, if you were looking at a participant standing on a platform, this participant leaning toward your right would indicate a positive CoP. In a way, conventionnally, CoP computations are participant-centered, but observer-centered (if it makes sense).
+
+## Example usage
+
+The `CoPY_ComputeR` automatically compute CoP-Y from moments and forces. It is only useful if you have a full description of your moments and forces. In contrast to other functions from the package, the `CoPY_ComputeR` only requires two vectors (Moments and Forces) to output a third vector (CoP).
+
+You collected 6 participants viewing passively some pictures for 100s.
+
+*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+
+```{r}
+# Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
+# Define the files and corresponding output names
+
+# If required: convert Rdata to text files.
+
+files <- list(
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+)
+
+# Loop through each file, add a blank row with spaces, and save as .txt
+for (name in names(files)) {
+    # Load the .Rdata file
+    load(files[[name]])
+    
+    # Dynamically get the object loaded (assuming it's named the same as the file)
+    data <- get(name)
+    
+    # Write to a .txt file with the same name
+    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+}
+
+Data<-Merge_PosData(".", SampleRate = 100, SessionDuration = 100)
+
+
+```
+
+You can compute CoP-Y from this dataset using the `CoPY_ComputeR` command:
+
+```{r}
+CoPY_ComputeR(Data$Mx, Data$Fz)[1:20] # Only displaying first 20 values
+```
+
+***Note***: the `Merge_PosData` automatically computes CoP-X and CoP-Y, so if you used this command, the `CoPX_ComputeR` and `CoPY_ComputeR` are redundant.
+
+
+## Further reading
+
+Quijoux, F., Nicolaï, A., Chairi, I., Bargiotas, I., Ricard, D., Yelnik, A., Oudre, L., Bertin-Hugault, F., Vidal, P. P., Vayatis, N., Buffat, S., & Audiffren, J. (2021). A review of center of pressure (COP) variables to quantify standing balance in elderly people: Algorithms and open-access code. *Physiological reports, 9*(22), e15067. https://doi.org/10.14814/phy2.15067 
+
+

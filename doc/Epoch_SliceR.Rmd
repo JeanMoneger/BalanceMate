@@ -1,0 +1,77 @@
+---
+title: "Synthetise your data into time-bins"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Epoch_SliceR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BalanceMate)
+```
+
+## Description
+
+The `Epoch_SliceR` command allows the user to compute average scores at a specified time-bin level. Note that users familiar with the `tidyverse` could once again do this data-wrangling by exploiting this powerful package. Nevertheless, we assume that some researchers might not be familiar with the pipe operators and specific grammar of the `tidyverse.` Our package hence wants to deliver a toolbox entailing the data-wrangling involved in postural studies.
+
+To use the `Epoch_SliceR`, you will need to determine the columns of your data you would like to synthetise, the sample rate in your protocol, and the time bin you want to define as your analysis unit.
+
+## Example Usage
+
+In a study with 6 participants, where you measured body sway for 100 seconds with a sample rate of 100Hz, you would like to synthetise the output in more comprehensible time bins of 1s.
+
+*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+
+```{r}
+#path_to_data <- system.file("extdata", package = "BalanceMate")
+#Data <- Merge_PosData(path_to_data, SampleRate = 100, SessionDuration = 100)
+
+# If required: convert Rdata to text files.
+
+files <- list(
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+)
+
+# Loop through each file, add a blank row with spaces, and save as .txt
+for (name in names(files)) {
+    # Load the .Rdata file
+    load(files[[name]])
+    
+    # Dynamically get the object loaded (assuming it's named the same as the file)
+    data <- get(name)
+    
+    # Write to a .txt file with the same name
+    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+}
+
+Data<-Merge_PosData(".", SampleRate = 100, SessionDuration = 100)
+
+
+Epoch_SliceR(df = Data,
+      ID = "file_name",
+      columns_to_synthesize = c("CoP_X", "CoP_Y"),
+      epoch_length = 1,
+      sample_rate=100,
+      session_duration = 100)[1:20,] # Only display the first 20 rows of the resulting data set
+```
+
+Note that this approach is not particularly recommended, unless you are working with extremely large data sets. In all other cases, you might want to keep your raw complete data sets and further compute postural indicators using time bins arguments (i.e., epoch specification).
+
+## Further reading
+
+See the [Managing section of the BalanceMate guide book](https://jeanmoneger.com/book/managing-1) 
+
+

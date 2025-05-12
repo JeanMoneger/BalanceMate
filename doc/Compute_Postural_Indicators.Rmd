@@ -1,0 +1,173 @@
+---
+title: "Compute Postural Indicators"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Compute_Postural_Indicators}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BalanceMate)
+library(ggplot2)
+
+```
+
+## Description
+
+More than 400 postural indicators can be computed from postural data (Quijoux et al., 2021). This presents significant challenges for reproducibility of postural studies and gives authors a great degree of freedom that could negatively influence false discovery rate in the literature. For this reason, based on a synthesis of a subsample of the literature (Monéger et al., 2024), we recommend using a subsample of indicators that are made available in the `BalanceMate` package by using `compute_postural_indicators`.
+
+It is possible that future versions of the package include more options, but for now, the options are restrained to CoP-X", "CoP-Y", Sway Path Length, Ellipse Area, SD CoP-X", and SD CoP-Y.
+
+The choices of these indicators were motivated by our personal literature review on postural displacements associated to passive viewing of pleasant and unpleasant pictures (see Figure 1 below; see also Monéger et al., 2024).
+
+**Figure 1**. Distribution of the different postural indicators in the field.
+```{r, echo = F, message= F, warning= F}
+
+# if (requireNamespace("ggplot2", quietly = TRUE)) {
+#   library(ggplot2)
+# }
+
+
+outcome_df<-structure(list(Outcome = structure(1:8, levels = c("Amplitude COP", 
+"Area Body Sw", "COP Y", "ErrorCoP", "MeanSpeed", "Other", "SD COP", 
+"Sway Path Length"), class = "factor"), Frequency = c(1L, 3L, 
+20L, 1L, 1L, 1L, 10L, 7L)), class = "data.frame", row.names = c(NA, 
+-8L))
+
+ggplot2::ggplot(outcome_df, aes(x = Outcome, y = Frequency, fill = Outcome)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Outcomes",
+    x = "Outcome Categories",
+    y = "Frequency",
+    caption = "Source: Monéger et al., 2024"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10)),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  ) +
+  scale_fill_brewer(palette = "Set3")  # You can change the palette as needed
+
+```
+
+### Usage example
+
+You have a data set (N = 6) where participants viewed pictures for 100 seconds. The protocol sampled data at a rate of 100Hz. You first need to manage your data output (see `Merge_PosData`, `Time_StampeR`, and the ["Manage" Chapter of the guide book](https://jeanmoneger.com/book/managing-1)).
+
+Each session included 20s of neutral picture viewing, then 8 trials including 2s fixation crosses, and 8seconds critical picture viewing. Using the `Time_StampeR` function from `BalanceMate`, you can then extract only the relevant data points of your critical trials (using `subset`).
+
+*Note: the files are stored as Rdata to reduce the size of the package -- however the command only accepts txt files, hence it is required to first convert Rdata to text files before running the examples*
+
+```{r}
+# Data<-Merge_PosData("~/Desktop/BalanceMate/inst/extdata/", SampleRate = 100, SessionDuration = 100)
+
+
+# If required: convert Rdata to text files.
+
+files <- list(
+    "Postural_DataA" = "~/Desktop/BalanceMate/data/Postural_DataA.Rdata",
+    "Postural_DataB" = "~/Desktop/BalanceMate/data/Postural_DataB.Rdata",
+    "Postural_DataC" = "~/Desktop/BalanceMate/data/Postural_DataC.Rdata",
+    "Postural_DataD" = "~/Desktop/BalanceMate/data/Postural_DataD.Rdata",
+    "Postural_DataE" = "~/Desktop/BalanceMate/data/Postural_DataE.Rdata",
+    "Postural_DataF" = "~/Desktop/BalanceMate/data/Postural_DataF.Rdata"
+)
+
+# Loop through each file, add a blank row with spaces, and save as .txt
+for (name in names(files)) {
+    # Load the .Rdata file
+    load(files[[name]])
+    
+    # Dynamically get the object loaded (assuming it's named the same as the file)
+    data <- get(name)
+    
+    # Add a "blank" row (spaces for all cells) at the top
+    #blank_row <- rep(" ", 6)  # Create a row of spaces with the same number of columns
+    #data <- rbind(blank_row, data)
+    
+    # Write to a .txt file with the same name
+    write.table(data, file = paste0(name, ".txt"), sep = ",", row.names = FALSE, col.names = FALSE, quote = FALSE)
+}
+
+Data<-Merge_PosData(".", SampleRate = 100, SessionDuration = 100)
+
+# Identify the time cuts in your protocol: 
+cuts<-c(20, 
+                     22, 
+                     30, 
+                     32, 
+                     40, 
+                     42, 
+                     50, 
+                     52, 
+                     60, 
+                     62, 
+                     70, 
+                     72, 
+                     80, 
+                     82,
+                     90, 
+                     92)
+
+# Label the periods:
+Label = c("Training", 
+          "Fix", 
+          "Trial_1", 
+          "Fix", 
+          "Trial_2", 
+          "Fix", 
+          "Trial_3",
+          "Fix", 
+          "Trial_4", 
+          "Fix", 
+          "Trial_5", 
+          "Fix", 
+          "Trial_6", 
+          "Fix", 
+          "Trial_7", 
+          "Fix", 
+          "Trial_8") 
+
+
+Annotated_Data <- Time_StampeR(df = Data, id_col = "file_name", sample_rate = 100, protocol_duration = 100, cuts = cuts, period_names = Label)
+
+Data <- subset(Annotated_Data, Annotated_Data$Period_Name != "Blank" & Annotated_Data$Period_Name != "Fix")
+
+```
+
+Now that you have your critical data set including only the critical trials, you can use the `compute_postural_indicators` to compute any available postural indicators. You just need to indicate at which level you would like to compute these indicators: 
+
+You can compute those at the **participants level**:
+
+```{r}
+CompleteData <- compute_postural_indicators(Data, CoPX_col = "CoP_X", CoPY_col = "CoP_Y", ID = "file_name", indicators = c("CoP_X", "CoP_Y", "SwayPathLength", "EllipseArea", "SD_CoP_X", "SD_CoP_Y"))
+
+head(CompleteData)
+```
+
+Or you can compute the indicators at a more narrow time-bin level. For instance, you are interested in seeing change in body sway during each trial every 1 second (epoch of 1s):
+
+```{r}
+CompleteData <- compute_postural_indicators(Data, CoPX_col = "CoP_X", CoPY_col = "CoP_Y", ID = "file_name", time_col = "Time", epoch_length = 1, indicators = c("CoP_X", "CoP_Y", "SwayPathLength", "EllipseArea", "SD_CoP_X", "SD_CoP_Y"))
+
+head(CompleteData)
+```
+
+### Further readings
+
+Lelard, T., Stins, J., & Mouras, H. (2019). Postural responses to emotional visual stimuli. Neurophysiologie clinique = Clinical neurophysiology, 49(2), 109–114. https://doi.org/10.1016/j.neucli.2019.01.005
+
+Monéger, J., Chaby, L., Besche-Richard, C., & Vergilino-Perez, D. (online preprint, September 2024). The Effects of Exposure to Pleasant/Unpleasant stimuli on Body Posture: a Systematic Review and Meta-Analysis. Authorea. https://doi.org/10.22541/au.172724765.51726753/v1 (retrieved from https://www.authorea.com/users/835564/articles/1227818-the-effects-of-exposure-to-pleasant-unpleasant-stimuli-on-body-posture-a-systematic-review-and-meta-analysis)
+
+Guide book on [Processing postural data using BalanceMate](https://jeanmoneger.com/book/processing)
