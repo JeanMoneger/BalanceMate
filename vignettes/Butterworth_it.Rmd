@@ -193,7 +193,7 @@ for (file in file_names) {
 
 ### Further readings
 
-I recommend reading the documentation of the [`signal`](https://cran.r-project.org/web/packages/signal/index.html) package and the chapter of the [BalanceMate book](https://jeanmoneger.com/book/pre-processing).
+I recommend reading the documentation of the [`signal`](https://CRAN.R-project.org/package=signal) package and the chapter of the [BalanceMate book](https://jeanmoneger.com/book/pre-processing).
 
 
 

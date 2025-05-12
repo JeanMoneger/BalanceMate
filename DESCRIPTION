@@ -1,10 +1,10 @@
 Package: BalanceMate
-Title: Managing, Pre-processing, And Processing Postural Data
+Title: Managing, Preprocessing, And Processing Postural Data
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Jean", family = "Monéger", email = "moneger.jean@outlook.fr", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1178-1896"))
-Description: This package groups functions that facilitates postural data management (e.g., merging data files, time-stamping the files, creating epochs), pre-processing (e.g., applying filter), and processing (e.g., computing Center of Pressure, Sway Path Length). It is designed to work with .txt outputs exported from the AMTI software "NetForce". *This work was supported by the laboratory Vision Action Cognition (Université Paris Cité), which provided the resources and environment necessary for this project's development.
+Description: Facilitates management, preprocessing, and analysis of postural data (e.g., merging data files, time-stamping, creating epochs; applying filters; computing center of pressure and sway path length) for text (.txt) exports from the AMTI NetForce software. Supported by the Vision Action Cognition laboratory at Université Paris Cité.
 Imports:
     signal (>= 1.8-0),
     scales (>= 1.3.0),
